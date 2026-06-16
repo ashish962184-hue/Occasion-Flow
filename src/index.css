@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-headline: "Cinzel", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-label: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-primary: #121314;
+  --color-primary-container: #2c2e30;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #e3e4e6;
+  
+  --color-secondary: #4a4d52;
+  --color-secondary-container: #f0f1f2;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #1b1c1e;
+
+  --color-tertiary: #a47e3c;
+  --color-tertiary-container: #fdfaf4;
+  
+  --color-surface: #ffffff;
+  --color-surface-dim: #f8f9fa;
+  --color-surface-container-low: #f1f3f5;
+  --color-surface-container-high: #e9ecef;
+  --color-surface-container-highest: #dee2e6;
+  
+  --color-outline: #79747e;
+  --color-outline-variant: #b0afb4;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface-dim);
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Elegant fade and entry keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+

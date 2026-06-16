@@ -1,0 +1,65 @@
+CREATE TABLE IF NOT EXISTS customers (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(50),
+    customer_type VARCHAR(50) DEFAULT 'Standard',
+    annual_budget NUMERIC,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS customer_preferences (
+    id VARCHAR(255) PRIMARY KEY,
+    customer_id VARCHAR(255) REFERENCES customers(id) ON DELETE CASCADE,
+    preference_type VARCHAR(100),
+    preference_value TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS occasions (
+    id VARCHAR(255) PRIMARY KEY,
+    customer_id VARCHAR(255) REFERENCES customers(id) ON DELETE CASCADE,
+    type VARCHAR(100) NOT NULL,
+    date DATE NOT NULL,
+    reminder_days INTEGER DEFAULT 14,
+    status VARCHAR(50) DEFAULT 'UPCOMING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS purchase_history (
+    id VARCHAR(255) PRIMARY KEY,
+    customer_id VARCHAR(255) REFERENCES customers(id) ON DELETE CASCADE,
+    item VARCHAR(255) NOT NULL,
+    amount NUMERIC,
+    order_date DATE,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS workflow_history (
+    id VARCHAR(255) PRIMARY KEY,
+    customer_id VARCHAR(255) REFERENCES customers(id) ON DELETE CASCADE,
+    status VARCHAR(50) NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS reminders (
+    id VARCHAR(255) PRIMARY KEY,
+    customer_id VARCHAR(255) REFERENCES customers(id) ON DELETE CASCADE,
+    occasion_id VARCHAR(255) REFERENCES occasions(id) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    status VARCHAR(50) DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS owners (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
