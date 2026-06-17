@@ -11,14 +11,6 @@
       "entrypoint": "server.js"
     }
   },
-  "functions": {
-    "backend/server.js": {
-      "includeFiles": "backend/database/database.sqlite"
-    },
-    "server.js": {
-      "includeFiles": "database/database.sqlite"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
