@@ -9,11 +9,10 @@ An elegant, high-end, full-stack application designed specifically for modern we
 This application utilizes a robust full-stack (Client + Server) layout with automated local data persistence:
 
 - **Frontend (SPA)**: Custom-constructed React single-page application styled using modern Tailwinds, serif Cinzel titles, geometric Inter parameters, and Lucide vector layouts.
-- **Backend (Express)**: A solid modular Express server on Port 3000 hosting custom REST endpoints for full-spectrum CRUD manipulation of customers, gift portfolios, occasions, and histories.
-- **Database (File-Durable)**: Uses a file-persistent schema located at `/crm_db.json`. It automates persistent writes and dynamically spins up a custom **Seeding Engine** on its very first startup compiling exactly:
-  - **50 Vetted VIP Profiles** with tags, custom allergies/contact addresses, and private notes.
-  - **100 Active Celebrations** (Anniversaries, Promotionals, Birthdays) scattered near the 2026 system timeframe.
-  - **200 Curated Gift Orders** ranging from vintage Macallans to custom Italian folder structures.
+- **Backend (Express)**: A solid modular Express server on Port 5000 hosting custom REST endpoints for full-spectrum CRUD manipulation of customers, gift portfolios, occasions, and histories.
+- **Database (SQLite)**: Uses a relational SQLite database located at `backend/database/database.sqlite`. It includes seeding and clearing scripts to populate mock data:
+  - Run `npm run seed:mock` to generate clients, events, and purchases.
+  - Run `npm run clear:mock` to reset the database.
 
 ---
 
@@ -34,10 +33,13 @@ This application utilizes a robust full-stack (Client + Server) layout with auto
 To start the full-stack system:
 
 ```bash
-# Install core modules
-npm run install_applet_dependencies
+# Install frontend dependencies
+npm install
 
-# Initiate server & dev tools
+# Install backend dependencies
+cd backend && npm install && cd ..
+
+# Initiate server & dev tools (runs frontend & backend concurrently)
 npm run dev
 
 # Compile production bundles
