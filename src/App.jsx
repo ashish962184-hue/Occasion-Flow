@@ -102,12 +102,12 @@ export default function App() {
     setIsLoading(true);
     try {
       const [resDash, resC, resO, resP, resR, resRep] = await Promise.all([
-        fetch('/api/dashboard'),
-        fetch(`/api/customers?q=${encodeURIComponent(searchQuery)}`),
-        fetch('/api/occasions'),
-        fetch('/api/purchase-history'),
-        fetch('/api/reminders'),
-        fetch('/api/reports')
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/dashboard`),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers?q=${encodeURIComponent(searchQuery)}`),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions`),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/purchase-history`),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/reminders`),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/reports`)
       ]);
 
       if (resDash.ok) setDashboardData((await resDash.json()).data);
@@ -128,7 +128,7 @@ export default function App() {
   const fetchCustomerDetail = async (id) => {
     setIsDetailLoading(true);
     try {
-      const res = await fetch(`/api/customers/${id}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers/${id}`);
       if (res.ok) {
         const payload = await res.json();
         setCurrentCustomerDetail(payload.data);
@@ -172,7 +172,7 @@ export default function App() {
   // API Mutating Procedures
   const handleAddCustomer = async (data) => {
     try {
-      const res = await fetch('/api/customers', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -186,7 +186,7 @@ export default function App() {
 
   const handleEditCustomer = async (id, data) => {
     try {
-      const res = await fetch(`/api/customers/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -202,7 +202,7 @@ export default function App() {
   const handleDeleteCustomer = async (id) => {
     if (!window.confirm("Are you sure you want to delete this customer? All their associated data will be removed.")) return;
     try {
-      const res = await fetch(`/api/customers/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers/${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {
@@ -217,7 +217,7 @@ export default function App() {
 
   const handleAddOccasion = async (data) => {
     try {
-      const res = await fetch('/api/occasions', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -232,7 +232,7 @@ export default function App() {
 
   const handleEditOccasion = async (id, data) => {
     try {
-      const res = await fetch(`/api/occasions/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -248,7 +248,7 @@ export default function App() {
   const handleDeleteOccasion = async (id) => {
     if (!window.confirm("Are you sure you want to remove this occasion?")) return;
     try {
-      const res = await fetch(`/api/occasions/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions/${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {
@@ -261,7 +261,7 @@ export default function App() {
 
   const handleAddPurchase = async (data) => {
     try {
-      const res = await fetch('/api/purchase-history', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/purchase-history`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -276,7 +276,7 @@ export default function App() {
 
   const handleUpdateReminder = async (id, data) => {
     try {
-      const res = await fetch(`/api/reminders/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/reminders/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -287,7 +287,7 @@ export default function App() {
 
   const handleUpdateWorkflow = async (data) => {
     try {
-      const res = await fetch(`/api/workflow/status`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/workflow/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

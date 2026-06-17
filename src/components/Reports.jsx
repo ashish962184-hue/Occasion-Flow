@@ -18,7 +18,7 @@ export default function Reports({ reportsData }) {
 
   const handleExportCSV = async () => {
     try {
-      const res = await fetch('/api/reports?format=csv');
+      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/reports?format=csv`);
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
