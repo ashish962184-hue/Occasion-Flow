@@ -52,10 +52,23 @@ app.use("/api/reminders", reminderRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/workflow", workflowRoutes);
 
+// Health Check
+app.use("/api/health", (req, res) => {
+  const db = require("./config/db");
+  db.query("SELECT COUNT(*) as count FROM customers", (err, rows) => {
+    if (err) return res.status(500).json({ status: "error", database: "disconnected" });
+    res.json({ status: "ok", database: "connected", seed_loaded: rows[0].count > 0, customer_count: rows[0].count });
+  });
+});
+
 // Catch-all for debugging Vercel routing
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found", url: req.url, originalUrl: req.originalUrl });
 });
+
+// Run Production Seed Strategy if DB is empty
+const runAutoSeed = require("./config/auto_seed");
+runAutoSeed();
 
 if (process.env.NODE_ENV !== 'production') {
   app.listen(5000, () => {
