@@ -17,6 +17,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Strip Vercel's routePrefix if it exists
+app.use((req, res, next) => {
+  if (req.url.startsWith('/_/backend')) {
+    req.url = req.url.replace('/_/backend', '');
+  }
+  next();
+});
+
 // Global DTO Wrapper for API Contracts
 app.use((req, res, next) => {
   const oldJson = res.json;
@@ -44,6 +52,10 @@ app.use("/api/reminders", reminderRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/workflow", workflowRoutes);
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(5000, () => {
+    console.log("Server running on port 5000");
+  });
+}
+
+module.exports = app;

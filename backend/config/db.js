@@ -1,7 +1,18 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.join(__dirname, '../database/database.sqlite');
+const fs = require('fs');
+let dbPath = path.join(__dirname, '../database/database.sqlite');
+
+// Vercel serverless environment is read-only except for /tmp
+if (process.env.NODE_ENV === 'production') {
+  const tmpPath = '/tmp/database.sqlite';
+  if (!fs.existsSync(tmpPath) && fs.existsSync(dbPath)) {
+    fs.copyFileSync(dbPath, tmpPath);
+  }
+  dbPath = tmpPath;
+}
+
 const sqliteDb = new sqlite3.Database(dbPath);
 
 sqliteDb.run("PRAGMA foreign_keys = ON;");
