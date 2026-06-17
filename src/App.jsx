@@ -14,7 +14,8 @@ import {
   X, 
   CheckCircle, 
   XCircle, 
-  Loader2
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
 
 export default function App() {
@@ -31,7 +32,7 @@ export default function App() {
   const [reminders, setReminders] = useState([]);
   const [reportsData, setReportsData] = useState(null);
   const [currentCustomerDetail, setCurrentCustomerDetail] = useState(null);
-
+  const [apiError, setApiError] = useState(false);
   // Settings state
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('crm_settings');
@@ -100,14 +101,19 @@ export default function App() {
   // Rest API getters
   const fetchAllData = async () => {
     setIsLoading(true);
+    setApiError(false);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
     try {
       const [resDash, resC, resO, resP, resR, resRep] = await Promise.all([
-        fetch(`${import.meta.env.VITE_API_URL || ""}/api/dashboard`),
-        fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers?q=${encodeURIComponent(searchQuery)}`),
-        fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions`),
-        fetch(`${import.meta.env.VITE_API_URL || ""}/api/purchase-history`),
-        fetch(`${import.meta.env.VITE_API_URL || ""}/api/reminders`),
-        fetch(`${import.meta.env.VITE_API_URL || ""}/api/reports`)
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/dashboard`, { signal: controller.signal }),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers?q=${encodeURIComponent(searchQuery)}`, { signal: controller.signal }),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions`, { signal: controller.signal }),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/purchase-history`, { signal: controller.signal }),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/reminders`, { signal: controller.signal }),
+        fetch(`${import.meta.env.VITE_API_URL || ""}/api/reports`, { signal: controller.signal })
       ]);
 
       const parseJson = async (res) => {
@@ -127,8 +133,14 @@ export default function App() {
 
     } catch (err) {
       console.error('[REST Error]', err);
-      triggerToast('Failed to connect to backend APIs.', 'error');
+      setApiError(true);
+      if (err.name === 'AbortError') {
+        triggerToast('Connection timed out. Backend may be sleeping.', 'error');
+      } else {
+        triggerToast('Failed to connect to backend APIs.', 'error');
+      }
     } finally {
+      clearTimeout(timeoutId);
       setIsLoading(false);
     }
   };
@@ -393,8 +405,24 @@ export default function App() {
         />
 
         <div className="flex-1 p-4 sm:p-8 overflow-y-auto">
-          {isLoading && !selectedCustomerId && !dashboardData ? (
-            <div className="flex flex-col items-center justify-center py-44 gap-3">
+          {apiError ? (
+            <div className="flex flex-col items-center justify-center py-44 gap-4 animate-fadeIn">
+              <div className="bg-error/10 text-error p-4 rounded-full">
+                <AlertCircle size={32} />
+              </div>
+              <h3 className="font-headline text-xl font-bold text-on-surface">Backend Connection Failed</h3>
+              <p className="font-body text-sm text-on-surface-variant text-center max-w-sm">
+                We couldn't reach the server. The external backend might be sleeping or deploying. Please try again.
+              </p>
+              <button 
+                onClick={fetchAllData}
+                className="mt-4 bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label font-bold text-sm hover:bg-primary/90 transition-colors shadow-sm"
+              >
+                Retry Connection
+              </button>
+            </div>
+          ) : isLoading && !selectedCustomerId && !dashboardData ? (
+            <div className="flex flex-col items-center justify-center py-44 gap-3 animate-fadeIn">
               <Loader2 className="text-primary animate-spin" size={32} />
               <p className="font-label text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Syncing Concierge Ledger...</p>
             </div>
