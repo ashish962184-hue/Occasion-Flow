@@ -120,18 +120,21 @@ export default function App() {
         const contentType = res.headers.get("content-type");
         const length = res.headers.get("content-length") || "unknown";
         console.log(`[API Diagnostic] ${endpoint} -> Status: ${res.status}, Length: ${length} bytes`);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} on ${endpoint}`);
+        }
         if (contentType && contentType.includes("application/json")) {
           return await res.json();
         }
         return null;
       };
 
-      if (resDash.ok) { const d = await parseJson(resDash, '/api/dashboard'); if(d) setDashboardData(d.data); }
-      if (resC.ok) { const d = await parseJson(resC, '/api/customers'); if(d) setCustomers(d.data); }
-      if (resO.ok) { const d = await parseJson(resO, '/api/occasions'); if(d) setOccasions(d.data); }
-      if (resP.ok) { const d = await parseJson(resP, '/api/purchase-history'); if(d) setPurchaseHistory(d.data); }
-      if (resR.ok) { const d = await parseJson(resR, '/api/reminders'); if(d) setReminders(d.data); }
-      if (resRep.ok) { const d = await parseJson(resRep, '/api/reports'); if(d) setReportsData(d.data); }
+      const dashData = await parseJson(resDash, '/api/dashboard'); if(dashData) setDashboardData(dashData.data);
+      const cData = await parseJson(resC, '/api/customers'); if(cData) setCustomers(cData.data);
+      const oData = await parseJson(resO, '/api/occasions'); if(oData) setOccasions(oData.data);
+      const pData = await parseJson(resP, '/api/purchase-history'); if(pData) setPurchaseHistory(pData.data);
+      const rData = await parseJson(resR, '/api/reminders'); if(rData) setReminders(rData.data);
+      const repData = await parseJson(resRep, '/api/reports'); if(repData) setReportsData(repData.data);
 
     } catch (err) {
       console.error('[REST Error]', err);
@@ -139,7 +142,7 @@ export default function App() {
       if (err.name === 'AbortError') {
         triggerToast('Connection timed out. Backend may be sleeping.', 'error');
       } else {
-        triggerToast('Failed to connect to backend APIs.', 'error');
+        triggerToast(`API Error: ${err.message}`, 'error');
       }
     } finally {
       clearTimeout(timeoutId);
