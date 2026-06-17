@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Plus, X, MoreVertical, Edit2, Shield, Calendar, Phone, Mail, FileText, Briefcase, DollarSign, Users, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Plus, X, MoreVertical, Edit2, Shield, Calendar, Phone, Mail, FileText, Briefcase, DollarSign, Users, Trash2, LayoutGrid, List, Eye, Gift } from 'lucide-react';
 
 export default function Customers({ 
   customers, 
@@ -8,10 +8,16 @@ export default function Customers({
   onAddCustomer, 
   onEditCustomer, 
   onDeleteCustomer,
-  onNavigateToDetail 
+  onNavigateToDetail,
+  onOpenQuickAdd
 }) {
+  const [viewMode, setViewMode] = useState(() => localStorage.getItem('customers_view_mode') || 'card');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('customers_view_mode', viewMode);
+  }, [viewMode]);
   
   // Form State
   const [name, setName] = useState('');
@@ -102,13 +108,38 @@ export default function Customers({
               className="w-full pl-10 pr-4 py-2 bg-background border border-outline-variant/50 rounded-xl text-sm font-body focus:outline-none focus:border-primary transition-colors"
             />
           </div>
-          <div className="text-xs font-label font-semibold text-on-surface-variant">
-            {customers.length} records
+          <div className="flex items-center gap-3">
+            <div className="bg-surface border border-outline-variant/30 rounded-lg p-0.5 flex">
+              <button 
+                onClick={() => setViewMode('card')}
+                className={`p-1.5 rounded-md transition-colors ${viewMode === 'card' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+                title="Card View"
+              >
+                <LayoutGrid size={16} />
+              </button>
+              <button 
+                onClick={() => setViewMode('table')}
+                className={`p-1.5 rounded-md transition-colors ${viewMode === 'table' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+                title="Table View"
+              >
+                <List size={16} />
+              </button>
+            </div>
+            <div className="text-xs font-label font-semibold text-on-surface-variant hidden sm:block">
+              {customers.length} records
+            </div>
           </div>
         </div>
 
-        {/* Desktop Table */}
-        <div className="flex-1 overflow-x-auto">
+        {/* Dynamic Content Area */}
+        <div className="flex-1 overflow-y-auto bg-surface-dim/30">
+          {customers.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-on-surface-variant">
+              <Users size={32} className="opacity-20 mb-3" />
+              <p className="font-body text-sm italic">No matching clients found.</p>
+            </div>
+          ) : viewMode === 'table' ? (
+            <div className="w-full overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider border-b border-outline-variant/15">
@@ -191,7 +222,74 @@ export default function Customers({
             </tbody>
           </table>
         </div>
-      </div>
+      ) : (
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {customers.map(c => (
+            <div key={c.id} className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group flex flex-col h-full">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigateToDetail(c.name)}>
+                  <div className="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-lg shrink-0">
+                    {c.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="font-headline font-bold text-on-surface group-hover:text-tertiary transition-colors leading-tight">{c.name}</h3>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                        c.customerType === 'VIP' ? 'bg-[#ca8a04]/15 text-[#ca8a04]' : 'bg-secondary-container text-on-secondary-container'
+                      }`}>
+                        {c.customerType}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleOpenEdit(c)} className="p-1 text-on-surface-variant hover:text-primary"><Edit2 size={14}/></button>
+                  <button onClick={() => onDeleteCustomer(c.id)} className="p-1 text-on-surface-variant hover:text-error"><Trash2 size={14}/></button>
+                </div>
+              </div>
+
+              <div className="space-y-2 mb-4 flex-1">
+                {c.email && <p className="font-body text-xs text-on-surface-variant flex items-center gap-2"><Mail size={12}/> {c.email}</p>}
+                {c.phone && <p className="font-body text-xs text-on-surface-variant flex items-center gap-2"><Phone size={12}/> {c.phone}</p>}
+                {c.budgetRange && <p className="font-body text-xs text-on-surface-variant flex items-center gap-2"><DollarSign size={12}/> {c.budgetRange}</p>}
+              </div>
+
+              {c.preferences && c.preferences.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {c.preferences.slice(0, 3).map((p, i) => (
+                    <span key={i} className="px-2 py-0.5 rounded border border-outline-variant/30 bg-surface text-[10px] text-on-surface-variant">{p}</span>
+                  ))}
+                  {c.preferences.length > 3 && <span className="px-1.5 py-0.5 rounded bg-surface-container text-[10px] text-on-surface-variant">+{c.preferences.length - 3}</span>}
+                </div>
+              )}
+
+              {/* Action Layer */}
+              <div className="pt-4 mt-auto border-t border-outline-variant/15 flex justify-between gap-2">
+                <button 
+                  onClick={() => onNavigateToDetail(c.name)}
+                  className="flex-1 flex justify-center items-center gap-1.5 py-2 rounded-lg bg-surface hover:bg-surface-container-highest border border-outline-variant/30 text-xs font-label font-bold text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  <Eye size={14} /> Profile
+                </button>
+                <button 
+                  onClick={() => onOpenQuickAdd('occasion', c.id)}
+                  className="flex-1 flex justify-center items-center gap-1.5 py-2 rounded-lg bg-surface hover:bg-surface-container-highest border border-outline-variant/30 text-xs font-label font-bold text-on-surface-variant hover:text-primary transition-colors"
+                >
+                  <Calendar size={14} /> Occasion
+                </button>
+                <button 
+                  onClick={() => onOpenQuickAdd('purchase', c.id)}
+                  className="flex-1 flex justify-center items-center gap-1.5 py-2 rounded-lg bg-surface hover:bg-surface-container-highest border border-outline-variant/30 text-xs font-label font-bold text-tertiary hover:text-[#a47e3c] transition-colors"
+                >
+                  <Gift size={14} /> Gift
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
 
       {/* Form Modal */}
       {isFormOpen && (

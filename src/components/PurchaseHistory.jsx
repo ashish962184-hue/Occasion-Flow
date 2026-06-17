@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Plus, History, Eye } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Plus, History, Eye, LayoutGrid, List, Gift } from 'lucide-react';
 
 export default function PurchaseHistory({ 
   purchaseHistory, 
@@ -8,7 +8,12 @@ export default function PurchaseHistory({
   onNavigateToCustomer,
   searchQuery 
 }) {
+  const [displayMode, setDisplayMode] = useState(() => localStorage.getItem('purchases_view_mode') || 'card');
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('purchases_view_mode', displayMode);
+  }, [displayMode]);
 
   const [customerId, setCustomerId] = useState('');
   const [giftItem, setGiftItem] = useState('');
@@ -52,12 +57,37 @@ export default function PurchaseHistory({
       <div className="bg-surface-container-lowest border border-outline-variant/15 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[500px]">
         <div className="p-4 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
             <h3 className="font-headline text-base font-bold text-on-surface flex items-center gap-2"><History size={18}/> All Records</h3>
-            <div className="text-xs font-label font-semibold text-on-surface-variant">
-              {filtered.length} purchases
+            <div className="flex items-center gap-3">
+              <div className="bg-surface border border-outline-variant/30 rounded-lg p-0.5 flex">
+                <button 
+                  onClick={() => setDisplayMode('card')}
+                  className={`p-1.5 rounded-md transition-colors ${displayMode === 'card' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+                  title="Card View"
+                >
+                  <LayoutGrid size={16} />
+                </button>
+                <button 
+                  onClick={() => setDisplayMode('table')}
+                  className={`p-1.5 rounded-md transition-colors ${displayMode === 'table' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+                  title="Table View"
+                >
+                  <List size={16} />
+                </button>
+              </div>
+              <div className="text-xs font-label font-semibold text-on-surface-variant hidden sm:block">
+                {filtered.length} purchases
+              </div>
             </div>
         </div>
 
-        <div className="flex-1 overflow-x-auto">
+        <div className="flex-1 overflow-y-auto bg-surface-dim/30">
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-on-surface-variant">
+              <Gift size={32} className="opacity-20 mb-3" />
+              <p className="font-body text-sm italic">No purchase records found.</p>
+            </div>
+          ) : displayMode === 'table' ? (
+            <div className="w-full overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider border-b border-outline-variant/15">
@@ -112,7 +142,41 @@ export default function PurchaseHistory({
             </tbody>
           </table>
         </div>
-      </div>
+      ) : (
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {filtered.map(p => {
+             const diff = (new Date('2026-06-12') - new Date(p.order_date)) / (1000*3600*24);
+             const isRepeat = diff > 300 && diff < 365;
+
+             return (
+              <div key={p.id} className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group flex flex-col h-full relative">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex flex-col">
+                    <span className="font-mono text-xs text-on-surface-variant mb-1">{p.order_date}</span>
+                    <span className="font-headline text-sm font-bold text-on-surface">${p.amount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => onNavigateToCustomer(p.customer_id)} className="p-1 text-on-surface-variant hover:text-primary" title="View Customer"><Eye size={14}/></button>
+                  </div>
+                </div>
+
+                <div className="mb-4 flex-1">
+                  <h3 className="font-headline font-bold text-on-surface text-lg leading-tight">{p.gift_item}</h3>
+                  {isRepeat && <span className="inline-block mt-1 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#22c55e]/15 text-[#16a34a]">Repeat Opp</span>}
+                  <div 
+                    className="font-body text-sm font-semibold text-primary hover:text-primary-container transition-colors mt-2 cursor-pointer flex items-center gap-1.5"
+                    onClick={() => onNavigateToCustomer(p.customer_id)}
+                  >
+                    <Eye size={14} className="text-on-surface-variant" /> {p.customer_name}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  </div>
 
       {isFormOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 backdrop-blur-sm p-4 animate-fadeIn">

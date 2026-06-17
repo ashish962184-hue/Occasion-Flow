@@ -35,3 +35,13 @@ exports.updateOccasion = (req, res) => {
     });
   });
 };
+
+exports.deleteOccasion = (req, res) => {
+  const { id } = req.params;
+  Occasion.delete(id, (err, result) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+    res.json({ message: "Occasion deleted successfully" });
+  });
+};

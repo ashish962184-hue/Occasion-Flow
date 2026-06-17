@@ -1,15 +1,32 @@
 import React from 'react';
 import { Users, Calendar, Clock, RotateCw, Activity, ArrowRight, Eye, Play } from 'lucide-react';
 
-export default function Dashboard({ metrics, onNavigateToCustomer, onNavigateToAllOccasions }) {
+export default function Dashboard({ metrics, occasions = [], reminders = [], onNavigateToCustomer, onNavigateToAllOccasions }) {
   if (!metrics) return null;
 
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const upcomingOccs = occasions.filter(o => {
+    if (!o.occasion_date) return false;
+    const parts = o.occasion_date.split('-');
+    if (parts.length !== 3) return false;
+    const occDate = new Date(parts[0], parts[1] - 1, parts[2]);
+    
+    // Check if within next 30 days
+    const diffDays = (occDate - today) / (1000 * 3600 * 24);
+    return diffDays >= 0 && diffDays <= 30;
+  }).sort((a, b) => new Date(a.occasion_date) - new Date(b.occasion_date));
+
+  const activeReminders = reminders.filter(r => r.status !== 'Completed' && r.status !== 'Missed');
+  const pendingFollowUpsCount = activeReminders.filter(r => r.status === 'Pending').length;
+
   const getWeekOccasionsCount = (type) => {
-    const today = new Date('2026-06-12');
-    return metrics.upcomingOccasions.filter(o => {
-      const d = new Date(o.occasion_date);
-      const diff = (d - today) / (1000 * 3600 * 24);
-      return o.occasion_type === type && diff >= 0 && diff <= 7;
+    return upcomingOccs.filter(o => {
+      const parts = o.occasion_date.split('-');
+      const occDate = new Date(parts[0], parts[1] - 1, parts[2]);
+      const diffDays = (occDate - today) / (1000 * 3600 * 24);
+      return o.occasion_type === type && diffDays >= 0 && diffDays <= 7;
     }).length;
   };
 
@@ -23,9 +40,9 @@ export default function Dashboard({ metrics, onNavigateToCustomer, onNavigateToA
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {[
           { label: 'Total Customers', value: metrics.totalCustomers, icon: Users, color: 'text-primary' },
-          { label: 'Upcoming Occasions (30d)', value: metrics.upcomingOccasions.length, icon: Calendar, color: 'text-tertiary' },
-          { label: 'Pending Follow-ups', value: metrics.pendingFollowUps, icon: Clock, color: 'text-error' },
-          { label: 'Reminder Queue', value: metrics.reminderQueue.length, icon: Activity, color: 'text-[#eab308]' },
+          { label: 'Upcoming Occasions (30d)', value: upcomingOccs.length, icon: Calendar, color: 'text-tertiary' },
+          { label: 'Pending Follow-ups', value: pendingFollowUpsCount, icon: Clock, color: 'text-error' },
+          { label: 'Reminder Queue', value: activeReminders.length, icon: Activity, color: 'text-[#eab308]' },
           { label: 'Repeat Opportunities', value: metrics.repeatOpportunities, icon: RotateCw, color: 'text-[#22c55e]' },
         ].map((stat, i) => {
           const Icon = stat.icon;
@@ -94,9 +111,10 @@ export default function Dashboard({ metrics, onNavigateToCustomer, onNavigateToA
                 </tr>
               </thead>
               <tbody>
-                {metrics.upcomingOccasions.length > 0 ? (
-                  metrics.upcomingOccasions.slice(0, 10).map((occ, idx) => {
-                    const rDate = new Date(occ.occasion_date);
+                {upcomingOccs.length > 0 ? (
+                  upcomingOccs.slice(0, 10).map((occ, idx) => {
+                    const parts = occ.occasion_date.split('-');
+                    const rDate = new Date(parts[0], parts[1] - 1, parts[2]);
                     rDate.setDate(rDate.getDate() - occ.reminder_days);
 
                     return (
@@ -108,7 +126,7 @@ export default function Dashboard({ metrics, onNavigateToCustomer, onNavigateToA
                           <div className="font-body text-sm text-on-surface-variant">{occ.occasion_type}</div>
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">
-                          {rDate.toISOString().split('T')[0]}
+                          {rDate.getFullYear()}-{String(rDate.getMonth() + 1).padStart(2, '0')}-{String(rDate.getDate()).padStart(2, '0')}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
@@ -151,14 +169,14 @@ export default function Dashboard({ metrics, onNavigateToCustomer, onNavigateToA
             <h3 className="font-headline text-base font-bold text-on-surface">Recent Reminder Activity</h3>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {metrics.reminderQueue.length > 0 ? (
-              metrics.reminderQueue.slice(0, 8).map((rem, idx) => (
+            {activeReminders.length > 0 ? (
+              activeReminders.slice(0, 8).map((rem, idx) => (
                 <div key={idx} className="flex gap-3 items-start border-b border-outline-variant/10 pb-3 last:border-0 last:pb-0">
-                  <div className="mt-1 w-2 h-2 rounded-full bg-[#ca8a04] shrink-0" />
+                  <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${rem.status === 'Triggered' ? 'bg-[#ca8a04]' : 'bg-primary'}`} />
                   <div>
                     <p className="font-label text-xs font-bold text-on-surface">Reminder: {rem.status}</p>
                     <p className="font-body text-[11px] text-on-surface-variant line-clamp-2 mt-0.5">
-                      Triggered for event on {rem.scheduled_date}
+                      Triggered for {rem.customer_name}'s {rem.occasion_type} on {rem.scheduled_date}
                     </p>
                   </div>
                 </div>

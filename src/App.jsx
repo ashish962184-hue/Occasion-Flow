@@ -63,6 +63,7 @@ export default function App() {
 
   // Global utilities
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
@@ -244,6 +245,20 @@ export default function App() {
     } catch(err) { console.error(err); }
   };
 
+  const handleDeleteOccasion = async (id) => {
+    if (!window.confirm("Are you sure you want to remove this occasion?")) return;
+    try {
+      const res = await fetch(`/api/occasions/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        triggerToast('Occasion removed successfully.');
+        fetchAllData();
+        if (selectedCustomerId) fetchCustomerDetail(selectedCustomerId);
+      }
+    } catch(err) { console.error(err); }
+  };
+
   const handleAddPurchase = async (data) => {
     try {
       const res = await fetch('/api/purchase-history', {
@@ -283,6 +298,14 @@ export default function App() {
         if (selectedCustomerId) fetchCustomerDetail(selectedCustomerId);
       }
     } catch(err) { console.error(err); }
+  };
+
+  // Opens Quick Add modal pre-filled with context
+  const handleOpenQuickAddWithContext = (tab, customerId) => {
+    if (tab === 'occasion') setQOccCust(customerId);
+    if (tab === 'purchase') setQGiftCust(customerId);
+    setQuickAddTab(tab);
+    setIsQuickAddOpen(true);
   };
 
   // Quick Add submission dispatcher
@@ -333,10 +356,12 @@ export default function App() {
         }} 
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
       />
 
-      <div className="pl-0 lg:pl-64 flex flex-col min-h-screen transition-all duration-300">
-        <Header 
+      <div className={`flex flex-col min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
+        <Header  
           title={
             currentScreen === 'dashboard' ? 'Concierge Hub' : 
             currentScreen === 'customers' ? 'Clients Directory' : 
@@ -356,6 +381,7 @@ export default function App() {
             setIsQuickAddOpen(true);
           }}
           onOpenSidebar={() => setIsSidebarOpen(true)}
+          onNavigate={handleNavigate}
         />
 
         <div className="flex-1 p-4 sm:p-8 overflow-y-auto">
@@ -369,6 +395,8 @@ export default function App() {
               {currentScreen === 'dashboard' && dashboardData && (
                 <Dashboard 
                   metrics={dashboardData}
+                  occasions={occasions}
+                  reminders={reminders}
                   onNavigateToCustomer={handleNavigateToCustomerDetail}
                   onNavigateToAllOccasions={() => handleNavigate('occasions')}
                 />
@@ -383,6 +411,7 @@ export default function App() {
                   onEditCustomer={handleEditCustomer}
                   onDeleteCustomer={handleDeleteCustomer}
                   onNavigateToDetail={handleNavigateToCustomerDetail}
+                  onOpenQuickAdd={handleOpenQuickAddWithContext}
                 />
               )}
 
@@ -392,6 +421,7 @@ export default function App() {
                   customers={customers}
                   onAddOccasion={handleAddOccasion}
                   onEditOccasion={handleEditOccasion}
+                  onDeleteOccasion={handleDeleteOccasion}
                   onNavigateToCustomer={handleNavigateToCustomerDetail}
                   searchQuery={searchQuery}
                 />
@@ -441,6 +471,7 @@ export default function App() {
                       onEditCustomer={handleEditCustomer}
                       onDeleteCustomer={() => handleDeleteCustomer(currentCustomerDetail.id)}
                       onAddOccasion={handleAddOccasion}
+                      onDeleteOccasion={handleDeleteOccasion}
                       onAddPurchase={handleAddPurchase}
                       onUpdateWorkflow={handleUpdateWorkflow}
                     />

@@ -8,10 +8,12 @@ import {
   Plus, 
   Settings,
   LayoutDashboard,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
-export default function Sidebar({ currentScreen, userName, userAvatar, onNavigate, onOpenQuickAdd, isOpen = false, onClose }) {
+export default function Sidebar({ currentScreen, userName, userAvatar, onNavigate, onOpenQuickAdd, isOpen = false, onClose, isCollapsed, onToggleCollapse }) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'customers', label: 'Customers', icon: Users },
@@ -34,19 +36,20 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
       )}
 
       <nav 
-        className={`fixed left-0 top-0 h-full flex flex-col border-r border-outline-variant/15 bg-surface-container-low dark:bg-surface-dim shadow-sm w-64 z-50 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed left-0 top-0 h-full flex flex-col border-r border-outline-variant/15 bg-surface-container-low shadow-sm z-50 transition-all duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        } ${isCollapsed ? 'w-20' : 'w-64'}`}
       >
         {/* Brand Header */}
-        <div className="px-6 py-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="px-4 py-8 flex items-center justify-between relative">
+          <div className="flex items-center gap-3 w-full">
             <div 
               onClick={() => {
                 onNavigate('dashboard');
                 if (onClose) onClose();
               }}
-              className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-xl cursor-pointer overflow-hidden border border-outline-variant/20 shrink-0"
+              className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-xl cursor-pointer overflow-hidden border border-outline-variant/20 shrink-0 mx-auto lg:mx-0"
+              title="Dashboard"
             >
               {userAvatar ? (
                 <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
@@ -54,19 +57,29 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
                 initial
               )}
             </div>
-            <div className="overflow-hidden">
-              <h1 
-                onClick={() => {
-                  onNavigate('dashboard');
-                  if (onClose) onClose();
-                }}
-                className="font-headline text-[13px] leading-tight font-bold text-on-surface cursor-pointer hover:opacity-90"
-              >
-                Gifting Occasion Calendar &amp; Customer Relationship Tracker
-              </h1>
-              <p className="font-body text-[11px] tracking-tight text-on-surface-variant truncate">{userName || 'CRM Admin'}</p>
-            </div>
+            {!isCollapsed && (
+              <div className="overflow-hidden animate-fadeIn">
+                <h1 
+                  onClick={() => {
+                    onNavigate('dashboard');
+                    if (onClose) onClose();
+                  }}
+                  className="font-headline text-[12px] leading-tight font-bold text-on-surface cursor-pointer hover:opacity-90 tracking-wide uppercase"
+                >
+                  Concierge CRM
+                </h1>
+                <p className="font-body text-[10px] tracking-widest text-on-surface-variant truncate uppercase mt-0.5">{userName || 'CRM Admin'}</p>
+              </div>
+            )}
           </div>
+          
+          {/* Desktop Collapse Toggle */}
+          <button 
+            onClick={onToggleCollapse}
+            className="hidden lg:flex absolute -right-3 top-10 bg-surface border border-outline-variant/20 rounded-full p-1 text-on-surface-variant hover:text-on-surface shadow-sm"
+          >
+            {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          </button>
 
           {/* Close button inside mobile menu */}
           <button 
@@ -78,16 +91,17 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
         </div>
 
         {/* Quick Add CTA */}
-        <div className="p-4">
+        <div className="p-4 flex justify-center">
           <button 
             onClick={() => {
               onOpenQuickAdd();
               if (onClose) onClose();
             }}
-            className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-tertiary to-[#a47e3c] dark:to-[#b8860b] text-white font-label text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-sm hover:shadow-md cursor-pointer border border-[#c49a3b]/20"
+            title="Quick Add"
+            className={`py-2.5 rounded-xl bg-gradient-to-r from-tertiary to-[#a47e3c] text-white font-label text-sm font-semibold hover:opacity-90 transition-all flex items-center justify-center shadow-sm hover:shadow-md cursor-pointer border border-[#c49a3b]/20 ${isCollapsed ? 'w-12 px-0' : 'w-full px-4 gap-2'}`}
           >
-            <Plus size={18} strokeWidth={2.5} />
-            <span>Quick Add</span>
+            <Plus size={18} strokeWidth={2} />
+            {!isCollapsed && <span>Quick Add</span>}
           </button>
         </div>
 
@@ -100,24 +114,29 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
               <a
                 key={item.id}
                 href={`#${item.id}`}
+                title={isCollapsed ? item.label : ''}
                 onClick={(e) => {
                   e.preventDefault();
                   onNavigate(item.id);
                   if (onClose) onClose();
                 }}
-                className={`flex items-center gap-3 px-4 py-2.5 transition-all rounded-lg group ${
+                className={`flex items-center px-4 py-3 transition-all group relative ${
                   isActive
-                    ? 'text-primary font-bold bg-secondary-container/50 scale-[0.98]'
-                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50'
-                }`}
+                    ? 'text-primary font-bold bg-surface'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50'
+                } ${isCollapsed ? 'justify-center' : 'gap-3'}`}
               >
+                {isActive && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-tertiary rounded-r-full shadow-[0_0_8px_rgba(180,140,54,0.4)]"></div>
+                )}
                 <Icon 
                   size={20} 
-                  className={`transition-transform duration-150 ${
-                    isActive ? 'text-primary scale-110' : 'text-on-surface-variant group-hover:scale-105'
+                  strokeWidth={1.5}
+                  className={`transition-transform duration-200 ${
+                    isActive ? 'text-tertiary' : 'text-on-surface-variant group-hover:scale-105'
                   }`} 
                 />
-                <span className="font-label text-sm font-medium">{item.label}</span>
+                {!isCollapsed && <span className="font-label text-[13px] tracking-wide font-medium">{item.label}</span>}
               </a>
             );
           })}
@@ -127,19 +146,23 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
         <div className="p-4 border-t border-outline-variant/15 mt-auto">
           <a
             href="#settings"
+            title={isCollapsed ? "Settings" : ""}
             onClick={(e) => {
               e.preventDefault();
               onNavigate('settings');
               if (onClose) onClose();
             }}
-            className={`flex items-center gap-3 px-4 py-2 transition-colors rounded-lg group ${
+            className={`flex items-center py-3 transition-colors relative group ${
               currentScreen === 'settings' 
-                ? 'text-primary font-bold bg-secondary-container/50'
-                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50'
-            }`}
+                ? 'text-primary font-bold bg-surface'
+                : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50'
+            } ${isCollapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}
           >
-            <Settings size={20} className="group-hover:rotate-45 transition-transform duration-300" />
-            <span className="font-label text-sm font-medium">Settings</span>
+            {currentScreen === 'settings' && (
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-tertiary rounded-r-full"></div>
+            )}
+            <Settings size={20} strokeWidth={1.5} className={`transition-transform duration-300 ${currentScreen === 'settings' ? 'text-tertiary' : 'group-hover:rotate-45'}`} />
+            {!isCollapsed && <span className="font-label text-[13px] tracking-wide font-medium">Settings</span>}
           </a>
         </div>
       </nav>

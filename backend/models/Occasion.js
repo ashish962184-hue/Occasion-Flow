@@ -53,6 +53,14 @@ class Occasion {
       callback
     );
   }
+
+  static delete(id, callback) {
+    // Delete associated reminders first, then occasion
+    db.query("DELETE FROM reminders WHERE occasion_id = ?", [id], (err) => {
+      if (err) return callback(err);
+      db.query("DELETE FROM occasions WHERE id = ?", [id], callback);
+    });
+  }
 }
 
 module.exports = Occasion;

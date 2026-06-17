@@ -37,27 +37,33 @@
 
 @layer base {
   :root {
-    --primary: #0f172a;
-    --primary-container: #f1f5f9;
+    --primary: #1c1c1c; /* Deep Charcoal */
+    --primary-container: #eae4d8;
     --on-primary: #ffffff;
-    --on-primary-container: #0f172a;
-    --secondary: #64748b;
-    --secondary-container: #f8fafc;
+    --on-primary-container: #1c1c1c;
+    
+    --secondary: #5a5a5a; /* Soft Graphite */
+    --secondary-container: #f4f1ea;
     --on-secondary: #ffffff;
-    --on-secondary-container: #334155;
-    --tertiary: #b48c36;
+    --on-secondary-container: #2b2b2b;
+    
+    --tertiary: #c19b6c; /* Muted Gold */
     --tertiary-container: #fdfaf4;
-    --surface: #ffffff;
-    --surface-dim: #f4f5f8;
-    --surface-container-low: #ffffff;
-    --surface-container-high: #f1f3f6;
-    --surface-container-highest: #e2e4e9;
+    
+    --surface: #ffffff; /* Soft White */
+    --surface-dim: #f8f6f0;
+    --surface-container-low: #fcfbfa;
+    --surface-container-high: #f4f1ea;
+    --surface-container-highest: #eae4d8;
     --surface-container-lowest: #ffffff;
-    --background: #ffffff;
-    --on-surface: #0f172a;
-    --on-surface-variant: #475569;
-    --outline: #94a3b8;
-    --outline-variant: #cbd5e1;
+    
+    --background: #fcfbfa; /* Warm Ivory */
+    
+    --on-surface: #1c1c1c;
+    --on-surface-variant: #5a5a5a;
+    
+    --outline: #b0a89d;
+    --outline-variant: #dfd8cf;
   }
 
   .dark {

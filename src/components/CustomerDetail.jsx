@@ -20,7 +20,8 @@ export default function CustomerDetail({
   onBack, 
   onEditCustomer, 
   onDeleteCustomer,
-  onAddOccasion, 
+  onAddOccasion,
+  onDeleteOccasion,
   onAddPurchase,
   onUpdateWorkflow 
 }) {
@@ -52,12 +53,22 @@ export default function CustomerDetail({
           <ArrowLeft size={20} />
         </button>
         <div className="flex-1 flex justify-between items-center">
-          <h2 className="font-headline text-2xl font-bold text-on-surface flex items-center gap-3">
-            {customer.name}
-            {customer.customerType === 'VIP' && (
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#ca8a04]/15 text-[#ca8a04]">VIP</span>
-            )}
-          </h2>
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-3xl shrink-0 shadow-sm border border-outline-variant/20">
+              {customer.name.charAt(0)}
+            </div>
+            <div>
+              <h2 className="font-headline text-3xl font-bold text-on-surface flex items-center gap-3">
+                {customer.name}
+              </h2>
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${customer.customerType === 'VIP' ? 'bg-[#ca8a04]/15 text-[#ca8a04]' : 'bg-secondary-container text-on-secondary-container'}`}>
+                  {customer.customerType}
+                </span>
+                <span className="font-body text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Client Profile</span>
+              </div>
+            </div>
+          </div>
           <button 
             onClick={onDeleteCustomer}
             className="p-2 bg-error/10 hover:bg-error/20 text-error rounded-xl transition-colors cursor-pointer flex items-center gap-2 font-label text-sm font-bold"
@@ -71,8 +82,8 @@ export default function CustomerDetail({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Core Profile & CRM States */}
         <div className="space-y-6">
-          <div className="bg-surface-container-lowest border border-outline-variant/15 rounded-2xl shadow-sm p-5">
-            <h3 className="font-label text-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant/10 pb-2">Client Profile</h3>
+          <div className="bg-surface border border-outline-variant/15 rounded-2xl shadow-sm p-6">
+            <h3 className="font-headline text-lg font-bold text-on-surface mb-6 border-b border-outline-variant/15 pb-3">Overview</h3>
             
             <div className="space-y-4">
               {customer.email && (
@@ -137,10 +148,10 @@ export default function CustomerDetail({
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Occasions Panel */}
-            <div className="bg-surface-container-lowest border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
-              <div className="px-4 py-3 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
-                <h3 className="font-headline text-sm font-bold text-on-surface flex items-center gap-2"><Calendar size={16} className="text-primary"/> Occasions</h3>
-                <button onClick={() => setIsOccasionModalOpen(true)} className="p-1 bg-surface-container hover:bg-primary-container/30 text-primary rounded-md transition-colors"><Plus size={16}/></button>
+            <div className="bg-surface border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
+              <div className="px-5 py-4 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
+                <h3 className="font-headline text-base font-bold text-on-surface flex items-center gap-2"><Calendar size={18} className="text-tertiary"/> Occasions</h3>
+                <button onClick={() => setIsOccasionModalOpen(true)} className="p-1.5 bg-surface-container hover:bg-tertiary-container/30 text-tertiary rounded-md transition-colors"><Plus size={16}/></button>
               </div>
               <div className="p-4 space-y-3 max-h-64 overflow-y-auto">
                 {customer.occasions?.length > 0 ? customer.occasions.map((o) => (
@@ -149,9 +160,18 @@ export default function CustomerDetail({
                       <p className="font-label text-sm font-bold text-on-surface">{o.occasion_type}</p>
                       <p className="font-mono text-xs text-on-surface-variant mt-0.5">{o.occasion_date}</p>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${o.status === 'Completed' ? 'bg-tertiary/15 text-tertiary' : 'bg-primary/10 text-primary'}`}>
-                      {o.status}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${o.status === 'Completed' ? 'bg-tertiary/15 text-tertiary' : 'bg-primary/10 text-primary'}`}>
+                        {o.status}
+                      </span>
+                      <button 
+                        onClick={() => onDeleteOccasion(o.id)}
+                        className="p-1 text-on-surface-variant hover:text-error bg-surface-container hover:bg-error/10 rounded-md transition-colors"
+                        title="Delete Occasion"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   </div>
                 )) : (
                   <p className="text-xs text-on-surface-variant italic text-center py-4">No occasions scheduled.</p>
@@ -160,10 +180,10 @@ export default function CustomerDetail({
             </div>
 
             {/* Purchase History Panel */}
-            <div className="bg-surface-container-lowest border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
-              <div className="px-4 py-3 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
-                <h3 className="font-headline text-sm font-bold text-on-surface flex items-center gap-2"><History size={16} className="text-tertiary"/> Purchases</h3>
-                <button onClick={() => setIsPurchaseModalOpen(true)} className="p-1 bg-surface-container hover:bg-tertiary-container/30 text-tertiary rounded-md transition-colors"><Plus size={16}/></button>
+            <div className="bg-surface border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
+              <div className="px-5 py-4 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
+                <h3 className="font-headline text-base font-bold text-on-surface flex items-center gap-2"><History size={18} className="text-tertiary"/> Purchases</h3>
+                <button onClick={() => setIsPurchaseModalOpen(true)} className="p-1.5 bg-surface-container hover:bg-tertiary-container/30 text-tertiary rounded-md transition-colors"><Plus size={16}/></button>
               </div>
               <div className="p-4 space-y-3 max-h-64 overflow-y-auto">
                 {customer.purchase_history?.length > 0 ? customer.purchase_history.map((g) => (
@@ -183,9 +203,9 @@ export default function CustomerDetail({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Reminder History Panel */}
-            <div className="bg-surface-container-lowest border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
-              <div className="px-4 py-3 border-b border-outline-variant/15 bg-surface-container-low">
-                <h3 className="font-headline text-sm font-bold text-on-surface flex items-center gap-2"><Bell size={16} className="text-[#ca8a04]"/> Reminders</h3>
+            <div className="bg-surface border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
+              <div className="px-5 py-4 border-b border-outline-variant/15 bg-surface-container-low">
+                <h3 className="font-headline text-base font-bold text-on-surface flex items-center gap-2"><Bell size={18} className="text-[#ca8a04]"/> Reminders</h3>
               </div>
               <div className="p-4 space-y-3 max-h-64 overflow-y-auto">
                 {customer.reminders?.length > 0 ? customer.reminders.map((r) => (
@@ -203,10 +223,10 @@ export default function CustomerDetail({
             </div>
 
             {/* Workflow Timeline Panel */}
-            <div className="bg-surface-container-lowest border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
-              <div className="px-4 py-3 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
-                <h3 className="font-headline text-sm font-bold text-on-surface flex items-center gap-2"><Activity size={16} className="text-[#8b5cf6]"/> Workflow Timeline</h3>
-                <button onClick={() => setIsWorkflowModalOpen(true)} className="text-xs font-bold font-label text-primary hover:underline">Update Status</button>
+            <div className="bg-surface border border-outline-variant/15 rounded-2xl shadow-sm flex flex-col">
+              <div className="px-5 py-4 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
+                <h3 className="font-headline text-base font-bold text-on-surface flex items-center gap-2"><Activity size={18} className="text-[#8b5cf6]"/> Workflow</h3>
+                <button onClick={() => setIsWorkflowModalOpen(true)} className="text-xs font-bold font-label text-tertiary hover:underline">Update</button>
               </div>
               <div className="p-4 space-y-4 max-h-64 overflow-y-auto relative before:absolute before:inset-0 before:ml-[21px] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-outline-variant/20 before:to-transparent">
                 {customer.workflow_history?.length > 0 ? customer.workflow_history.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).map((w) => (

@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
-import { Search, Plus, Calendar as CalendarIcon, Edit2, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Plus, Calendar as CalendarIcon, Edit2, ChevronLeft, ChevronRight, Eye, Trash2, LayoutGrid, List } from 'lucide-react';
 
 export default function Occasions({ 
   occasions, 
   customers,
   onAddOccasion, 
   onEditOccasion, 
+  onDeleteOccasion,
   onNavigateToCustomer,
   searchQuery 
 }) {
   const [viewMode, setViewMode] = useState('Month'); // Month or Week
+  const [displayMode, setDisplayMode] = useState(() => localStorage.getItem('occasions_view_mode') || 'card');
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('occasions_view_mode', displayMode);
+  }, [displayMode]);
 
   const [customerId, setCustomerId] = useState('');
   const [occType, setOccType] = useState('Birthday');
@@ -19,10 +26,63 @@ export default function Occasions({
   const [occDays, setOccDays] = useState(7);
   const [status, setStatus] = useState('Upcoming');
 
-  const filtered = occasions.filter(o => 
-    o.customer_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    o.occasion_type?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handlePrev = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === 'Month') {
+      newDate.setMonth(newDate.getMonth() - 1);
+    } else {
+      newDate.setDate(newDate.getDate() - 7);
+    }
+    setCurrentDate(newDate);
+  };
+
+  const handleNext = () => {
+    const newDate = new Date(currentDate);
+    if (viewMode === 'Month') {
+      newDate.setMonth(newDate.getMonth() + 1);
+    } else {
+      newDate.setDate(newDate.getDate() + 7);
+    }
+    setCurrentDate(newDate);
+  };
+
+  const getHeaderText = () => {
+    if (viewMode === 'Month') {
+      return currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+    } else {
+      const start = new Date(currentDate);
+      start.setDate(start.getDate() - start.getDay());
+      return `Week of ${start.toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+    }
+  };
+
+  const filtered = occasions.filter(o => {
+    const searchMatch = o.customer_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        o.occasion_type?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (!searchMatch) return false;
+
+    if (!o.occasion_date) return true;
+    
+    const parts = o.occasion_date.split('-');
+    if (parts.length !== 3) return true;
+    const occDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    
+    if (viewMode === 'Month') {
+      return occDateObj.getMonth() === currentDate.getMonth() && 
+             occDateObj.getFullYear() === currentDate.getFullYear();
+    } else {
+      const start = new Date(currentDate);
+      start.setDate(start.getDate() - start.getDay());
+      start.setHours(0,0,0,0);
+      
+      const end = new Date(start);
+      end.setDate(end.getDate() + 6);
+      end.setHours(23,59,59,999);
+      
+      return occDateObj >= start && occDateObj <= end;
+    }
+  });
 
   const handleOpenEdit = (occ) => {
     setCustomerId(occ.customer_id);
@@ -86,20 +146,44 @@ export default function Occasions({
       </div>
 
       <div className="bg-surface-container-lowest border border-outline-variant/15 rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-[500px]">
-        {/* Header / Search */}
-        <div className="p-4 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center">
-            <div className="flex items-center gap-4">
-                <button className="p-1 text-on-surface-variant hover:text-on-surface"><ChevronLeft size={20}/></button>
-                <h3 className="font-headline text-base font-bold text-on-surface flex items-center gap-2"><CalendarIcon size={18}/> June 2026</h3>
-                <button className="p-1 text-on-surface-variant hover:text-on-surface"><ChevronRight size={20}/></button>
+        <div className="p-4 border-b border-outline-variant/15 bg-surface-container-low flex justify-between items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
+                <button onClick={handlePrev} className="p-1 text-on-surface-variant hover:text-on-surface"><ChevronLeft size={20}/></button>
+                <h3 className="font-headline text-sm sm:text-base font-bold text-on-surface flex items-center gap-2 min-w-[120px] sm:min-w-[140px] justify-center"><CalendarIcon size={18}/> <span className="hidden sm:inline">{getHeaderText()}</span><span className="sm:hidden">{viewMode}</span></h3>
+                <button onClick={handleNext} className="p-1 text-on-surface-variant hover:text-on-surface"><ChevronRight size={20}/></button>
             </div>
-            <div className="text-xs font-label font-semibold text-on-surface-variant">
-              {filtered.length} upcoming events
+            <div className="flex items-center gap-3">
+              <div className="bg-surface border border-outline-variant/30 rounded-lg p-0.5 flex">
+                <button 
+                  onClick={() => setDisplayMode('card')}
+                  className={`p-1.5 rounded-md transition-colors ${displayMode === 'card' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+                  title="Card View"
+                >
+                  <LayoutGrid size={16} />
+                </button>
+                <button 
+                  onClick={() => setDisplayMode('table')}
+                  className={`p-1.5 rounded-md transition-colors ${displayMode === 'table' ? 'bg-surface-container-highest text-on-surface' : 'text-on-surface-variant hover:text-on-surface'}`}
+                  title="Table View"
+                >
+                  <List size={16} />
+                </button>
+              </div>
+              <div className="text-xs font-label font-semibold text-on-surface-variant hidden sm:block">
+                {filtered.length} upcoming events
+              </div>
             </div>
         </div>
 
-        {/* List View matching the calendar conceptual style */}
-        <div className="flex-1 overflow-x-auto">
+        {/* Dynamic Content Area */}
+        <div className="flex-1 overflow-y-auto bg-surface-dim/30">
+          {filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-on-surface-variant">
+              <CalendarIcon size={32} className="opacity-20 mb-3" />
+              <p className="font-body text-sm italic">No occasions found.</p>
+            </div>
+          ) : displayMode === 'table' ? (
+            <div className="w-full overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container text-on-surface-variant font-label text-xs uppercase tracking-wider border-b border-outline-variant/15">
@@ -145,8 +229,16 @@ export default function Occasions({
                       <button 
                         onClick={() => onNavigateToCustomer(o.customer_id)}
                         className="p-1.5 text-on-surface-variant hover:text-primary bg-surface-container hover:bg-primary-container/20 rounded-md transition-colors"
+                        title="View Customer"
                       >
                         <Eye size={16} />
+                      </button>
+                      <button 
+                        onClick={() => onDeleteOccasion(o.id)}
+                        className="p-1.5 text-on-surface-variant hover:text-error bg-surface-container hover:bg-error/10 rounded-md transition-colors"
+                        title="Delete Occasion"
+                      >
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
@@ -161,7 +253,43 @@ export default function Occasions({
             </tbody>
           </table>
         </div>
-      </div>
+      ) : (
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {filtered.map(o => (
+            <div key={o.id} className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group flex flex-col h-full relative">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex flex-col">
+                  <span className="font-mono text-xs text-on-surface-variant mb-1">{o.occasion_date}</span>
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider w-fit ${
+                    o.status === 'Completed' ? 'bg-tertiary/15 text-tertiary' :
+                    o.status === 'Triggered' ? 'bg-[#eab308]/15 text-[#ca8a04]' :
+                    o.status === 'Missed' ? 'bg-error/15 text-error' :
+                    'bg-primary/10 text-primary'
+                  }`}>
+                    {o.status}
+                  </span>
+                </div>
+                <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleOpenEdit(o)} className="p-1 text-on-surface-variant hover:text-primary"><Edit2 size={14}/></button>
+                  <button onClick={() => onDeleteOccasion(o.id)} className="p-1 text-on-surface-variant hover:text-error"><Trash2 size={14}/></button>
+                </div>
+              </div>
+
+              <div className="mb-4 flex-1">
+                <h3 className="font-headline font-bold text-on-surface text-lg leading-tight">{o.occasion_type}</h3>
+                <div 
+                  className="font-body text-sm font-semibold text-primary hover:text-primary-container transition-colors mt-2 cursor-pointer flex items-center gap-1.5"
+                  onClick={() => onNavigateToCustomer(o.customer_id)}
+                >
+                  <Eye size={14} className="text-on-surface-variant" /> {o.customer_name}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
 
       {isFormOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 backdrop-blur-sm p-4 animate-fadeIn">
