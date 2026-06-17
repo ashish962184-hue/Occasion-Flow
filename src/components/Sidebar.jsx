@@ -48,14 +48,10 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
                 onNavigate('dashboard');
                 if (onClose) onClose();
               }}
-              className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-xl cursor-pointer overflow-hidden border border-outline-variant/20 shrink-0 mx-auto lg:mx-0"
+              className="w-10 h-10 rounded-xl bg-white flex items-center justify-center cursor-pointer overflow-hidden border border-outline-variant/20 shrink-0 mx-auto lg:mx-0 shadow-sm"
               title="Dashboard"
             >
-              {userAvatar ? (
-                <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                initial
-              )}
+              <img src="/logo.png" alt="Concierge Logo" className="w-full h-full object-contain p-0.5" />
             </div>
             {!isCollapsed && (
               <div className="overflow-hidden animate-fadeIn">
