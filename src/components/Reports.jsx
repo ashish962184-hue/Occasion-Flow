@@ -21,7 +21,7 @@ export default function Reports({ reportsData }) {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Alexandria_Report_${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = `CRM_Report_${new Date().toISOString().split('T')[0]}.csv`;
       document.body.appendChild(a);
       a.click();
       a.remove();

@@ -60,9 +60,9 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
                   onNavigate('dashboard');
                   if (onClose) onClose();
                 }}
-                className="font-headline text-lg font-bold text-on-surface cursor-pointer hover:opacity-90 truncate"
+                className="font-headline text-[13px] leading-tight font-bold text-on-surface cursor-pointer hover:opacity-90"
               >
-                Alexandria CRM
+                Gifting Occasion Calendar &amp; Customer Relationship Tracker
               </h1>
               <p className="font-body text-[11px] tracking-tight text-on-surface-variant truncate">{userName || 'CRM Admin'}</p>
             </div>

@@ -7,8 +7,8 @@ export default function Settings({ settings, onSaveSettings }) {
   const fileInputRef = useRef(null);
 
   // Form states
-  const [name, setName] = useState(settings?.name || 'Alexandria Admin');
-  const [email, setEmail] = useState(settings?.email || 'admin@alexandria.local');
+  const [name, setName] = useState(settings?.name || 'Concierge Admin');
+  const [email, setEmail] = useState(settings?.email || 'admin@concierge.local');
   const [emailNotifications, setEmailNotifications] = useState(settings?.emailNotifications ?? true);
   const [smsNotifications, setSmsNotifications] = useState(settings?.smsNotifications ?? false);
   const [theme, setTheme] = useState(settings?.theme || 'system');

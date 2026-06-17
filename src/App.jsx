@@ -36,8 +36,8 @@ export default function App() {
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('crm_settings');
     return saved ? JSON.parse(saved) : {
-      name: 'Alexandria Admin',
-      email: 'admin@alexandria.local',
+      name: 'Concierge Admin',
+      email: 'admin@concierge.local',
       theme: 'system',
       emailNotifications: true,
       smsNotifications: false
@@ -338,13 +338,13 @@ export default function App() {
       <div className="pl-0 lg:pl-64 flex flex-col min-h-screen transition-all duration-300">
         <Header 
           title={
-            currentScreen === 'dashboard' ? 'Alexandria Concierge Hub' : 
+            currentScreen === 'dashboard' ? 'Concierge Hub' : 
             currentScreen === 'customers' ? 'Clients Directory' : 
             currentScreen === 'occasions' ? 'Milestones Calendar' : 
             currentScreen === 'purchase-history' ? 'Purchase Ledger' : 
             currentScreen === 'reminders' ? 'Reminders Deck' : 
             currentScreen === 'reports' ? 'Executive Boardroom' : 
-            currentCustomerDetail ? `Profile · ${currentCustomerDetail.name}` : 'Alexandria CRM'
+            currentCustomerDetail ? `Profile · ${currentCustomerDetail.name}` : 'Gifting Occasion Calendar & Customer Relationship Tracker'
           }
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -362,7 +362,7 @@ export default function App() {
           {isLoading && !selectedCustomerId && !dashboardData ? (
             <div className="flex flex-col items-center justify-center py-44 gap-3">
               <Loader2 className="text-primary animate-spin" size={32} />
-              <p className="font-label text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Syncing Alexandria Ledger...</p>
+              <p className="font-label text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Syncing Concierge Ledger...</p>
             </div>
           ) : (
             <>

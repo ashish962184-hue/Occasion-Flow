@@ -1,16 +1,16 @@
-# Alexandria CRM ⚜️
+# Gifting Occasion Calendar & Customer Relationship Tracker ⚜️
 
-An elegant, high-end, full-stack Gifting Occasion Calendar and Customer Relationship CRM Tracker designed for modern wealth managers and high-touch concierge teams. 
+An elegant, high-end, full-stack application designed specifically for modern wealth managers, high-touch concierges, and luxury sales professionals.
 
 ---
 
-## 🏛️ System Architecture
+## 🏛️ Project Architecture
 
-Alexandria CRM utilizes a robust full-stack (Client + Server) layout with automated local data persistence:
+This application utilizes a robust full-stack (Client + Server) layout with automated local data persistence:
 
 - **Frontend (SPA)**: Custom-constructed React single-page application styled using modern Tailwinds, serif Cinzel titles, geometric Inter parameters, and Lucide vector layouts.
 - **Backend (Express)**: A solid modular Express server on Port 3000 hosting custom REST endpoints for full-spectrum CRUD manipulation of customers, gift portfolios, occasions, and histories.
-- **Database (File-Durable)**: Uses a file-persistent schema located at `/alexandria_db.json`. It automates persistent writes and dynamically spins up a custom **Seeding Engine** on its very first startup compiling exactly:
+- **Database (File-Durable)**: Uses a file-persistent schema located at `/crm_db.json`. It automates persistent writes and dynamically spins up a custom **Seeding Engine** on its very first startup compiling exactly:
   - **50 Vetted VIP Profiles** with tags, custom allergies/contact addresses, and private notes.
   - **100 Active Celebrations** (Anniversaries, Promotionals, Birthdays) scattered near the 2026 system timeframe.
   - **200 Curated Gift Orders** ranging from vintage Macallans to custom Italian folder structures.
@@ -29,7 +29,7 @@ Alexandria CRM utilizes a robust full-stack (Client + Server) layout with automa
 
 ---
 
-## 🚀 Running Alexandria Core
+## 🚀 Running Application Core
 
 To start the full-stack system:
 

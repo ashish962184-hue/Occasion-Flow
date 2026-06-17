@@ -2,7 +2,7 @@ import React from 'react';
 import { Search, PlusCircle, Menu } from 'lucide-react';
 
 export default function Header({ 
-  title = 'Alexandria CRM', 
+  title = 'Gifting Occasion Calendar & Customer Relationship Tracker', 
   searchQuery, 
   onSearchChange, 
   userAvatar,

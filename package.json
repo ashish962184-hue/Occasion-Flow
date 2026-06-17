@@ -10,7 +10,9 @@
     "build": "vite build",
     "start": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "echo 'JS Lint Successful'"
+    "lint": "echo 'JS Lint Successful'",
+    "seed:mock": "node backend/database/seed_mock_data.js",
+    "clear:mock": "node backend/database/clear_mock_data.js"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

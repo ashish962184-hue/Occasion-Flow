@@ -142,7 +142,7 @@ export default function GiftHistory({
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'Alexandria_Gift_Ledger.csv');
+    a.setAttribute('download', 'CRM_Gift_Ledger.csv');
     a.click();
   };
 

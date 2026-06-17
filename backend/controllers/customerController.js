@@ -39,14 +39,31 @@ const getCustomers = (req, res) => {
   });
 };
 
-const deleteCustomer = (req, res) => {
+const deleteCustomer = async (req, res) => {
   const { id } = req.params;
-  db.query("DELETE FROM customers WHERE id = ?", [id], (err, result) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
-    res.json({ message: "Customer deleted successfully" });
+
+  const query = (sql, params) => new Promise((resolve, reject) => {
+    db.query(sql, params, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
   });
+
+  try {
+    // Delete associated data first
+    await query("DELETE FROM occasions WHERE customer_id = ?", [id]);
+    await query("DELETE FROM orders WHERE customer_id = ?", [id]);
+    await query("DELETE FROM reminders WHERE customer_id = ?", [id]);
+    await query("DELETE FROM workflow_history WHERE customer_id = ?", [id]);
+    
+    // Then delete the customer
+    await query("DELETE FROM customers WHERE id = ?", [id]);
+    
+    res.json({ message: "Customer and all associated records deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error during deletion" });
+  }
 };
 
 const getCustomerById = async (req, res) => {
@@ -87,9 +104,27 @@ const getCustomerById = async (req, res) => {
   }
 };
 
+const updateCustomer = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone, customerType } = req.body;
+
+  const sql = "UPDATE customers SET name = ?, email = ?, phone = ?, customerType = ? WHERE id = ?";
+  
+  db.query(sql, [name, email, phone, customerType, id], (err, result) => {
+    if (err) {
+      if (err.code === "ER_DUP_ENTRY" || err.code === "SQLITE_CONSTRAINT") {
+        return res.status(400).json({ message: "Email or Name/Phone combination already exists" });
+      }
+      return res.status(500).json(err);
+    }
+    res.json({ message: "Customer updated successfully" });
+  });
+};
+
 module.exports = {
   createCustomer,
   getCustomers,
   deleteCustomer,
   getCustomerById,
+  updateCustomer,
 };
