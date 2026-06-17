@@ -110,12 +110,20 @@ export default function App() {
         fetch(`${import.meta.env.VITE_API_URL || ""}/api/reports`)
       ]);
 
-      if (resDash.ok) setDashboardData((await resDash.json()).data);
-      if (resC.ok) setCustomers((await resC.json()).data);
-      if (resO.ok) setOccasions((await resO.json()).data);
-      if (resP.ok) setPurchaseHistory((await resP.json()).data);
-      if (resR.ok) setReminders((await resR.json()).data);
-      if (resRep.ok) setReportsData((await resRep.json()).data);
+      const parseJson = async (res) => {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          return await res.json();
+        }
+        return null;
+      };
+
+      if (resDash.ok) { const d = await parseJson(resDash); if(d) setDashboardData(d.data); }
+      if (resC.ok) { const d = await parseJson(resC); if(d) setCustomers(d.data); }
+      if (resO.ok) { const d = await parseJson(resO); if(d) setOccasions(d.data); }
+      if (resP.ok) { const d = await parseJson(resP); if(d) setPurchaseHistory(d.data); }
+      if (resR.ok) { const d = await parseJson(resR); if(d) setReminders(d.data); }
+      if (resRep.ok) { const d = await parseJson(resRep); if(d) setReportsData(d.data); }
 
     } catch (err) {
       console.error('[REST Error]', err);

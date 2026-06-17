@@ -17,7 +17,7 @@
       "destination": "/_/backend/api/$1"
     },
     {
-      "source": "/((?!api/|assets/|.*\\.).*)",
+      "source": "/((?!api/|assets/|_/backend/|.*\\.).*)",
       "destination": "/index.html"
     }
   ]
