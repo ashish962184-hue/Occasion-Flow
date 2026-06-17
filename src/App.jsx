@@ -198,6 +198,22 @@ export default function App() {
     } catch(err) { console.error(err); }
   };
 
+  const handleDeleteCustomer = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this customer? All their associated data will be removed.")) return;
+    try {
+      const res = await fetch(`/api/customers/${id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        triggerToast('Client profile deleted successfully.');
+        fetchAllData();
+        if (currentScreen === 'customer-detail' && selectedCustomerId === id) {
+          handleNavigate('customers');
+        }
+      }
+    } catch(err) { console.error(err); }
+  };
+
   const handleAddOccasion = async (data) => {
     try {
       const res = await fetch('/api/occasions', {
@@ -365,6 +381,7 @@ export default function App() {
                   onSearchChange={setSearchQuery}
                   onAddCustomer={handleAddCustomer}
                   onEditCustomer={handleEditCustomer}
+                  onDeleteCustomer={handleDeleteCustomer}
                   onNavigateToDetail={handleNavigateToCustomerDetail}
                 />
               )}
@@ -422,6 +439,7 @@ export default function App() {
                       customer={currentCustomerDetail}
                       onBack={() => handleNavigate('customers')}
                       onEditCustomer={handleEditCustomer}
+                      onDeleteCustomer={() => handleDeleteCustomer(currentCustomerDetail.id)}
                       onAddOccasion={handleAddOccasion}
                       onAddPurchase={handleAddPurchase}
                       onUpdateWorkflow={handleUpdateWorkflow}

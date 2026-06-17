@@ -22,3 +22,16 @@ exports.getOccasions = (req, res) => {
     res.json(results);
   });
 };
+
+exports.updateOccasion = (req, res) => {
+  const { id } = req.params;
+  Occasion.update(id, req.body, (err, result) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+
+    res.json({
+      message: "Occasion updated successfully",
+    });
+  });
+};

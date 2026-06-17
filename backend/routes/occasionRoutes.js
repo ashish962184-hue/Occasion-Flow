@@ -3,10 +3,12 @@ const router = express.Router();
 
 const {
   createOccasion,
-  getOccasions
+  getOccasions,
+  updateOccasion
 } = require("../controllers/occasionController");
 
 router.post("/", createOccasion);
 router.get("/", getOccasions);
+router.put("/:id", updateOccasion);
 
 module.exports = router;

@@ -11,13 +11,15 @@ import {
   Bell,
   CheckCircle,
   Clock,
-  Briefcase
+  Briefcase,
+  Trash2
 } from 'lucide-react';
 
 export default function CustomerDetail({ 
   customer, 
   onBack, 
   onEditCustomer, 
+  onDeleteCustomer,
   onAddOccasion, 
   onAddPurchase,
   onUpdateWorkflow 
@@ -49,13 +51,20 @@ export default function CustomerDetail({
         >
           <ArrowLeft size={20} />
         </button>
-        <div className="flex-1">
+        <div className="flex-1 flex justify-between items-center">
           <h2 className="font-headline text-2xl font-bold text-on-surface flex items-center gap-3">
             {customer.name}
             {customer.customerType === 'VIP' && (
               <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#ca8a04]/15 text-[#ca8a04]">VIP</span>
             )}
           </h2>
+          <button 
+            onClick={onDeleteCustomer}
+            className="p-2 bg-error/10 hover:bg-error/20 text-error rounded-xl transition-colors cursor-pointer flex items-center gap-2 font-label text-sm font-bold"
+          >
+            <Trash2 size={16} />
+            <span className="hidden sm:inline">Delete Client</span>
+          </button>
         </div>
       </div>
 

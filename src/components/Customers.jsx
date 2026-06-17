@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, X, MoreVertical, Edit2, Shield, Calendar, Phone, Mail, FileText, Briefcase, DollarSign, Users } from 'lucide-react';
+import { Search, Plus, X, MoreVertical, Edit2, Shield, Calendar, Phone, Mail, FileText, Briefcase, DollarSign, Users, Trash2 } from 'lucide-react';
 
 export default function Customers({ 
   customers, 
@@ -7,6 +7,7 @@ export default function Customers({
   onSearchChange, 
   onAddCustomer, 
   onEditCustomer, 
+  onDeleteCustomer,
   onNavigateToDetail 
 }) {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -166,6 +167,13 @@ export default function Customers({
                         title="Edit Profile"
                       >
                         <Edit2 size={16} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); onDeleteCustomer(c.id); }}
+                        className="p-1.5 text-on-surface-variant hover:text-error bg-surface-container hover:bg-error/20 rounded-md transition-colors"
+                        title="Delete Profile"
+                      >
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
