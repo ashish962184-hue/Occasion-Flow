@@ -1,6 +1,0 @@
-{
-  "name": "Alexandria CRM",
-  "description": "Gifting Occasion Calendar & Customer Relationship Tracker",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
