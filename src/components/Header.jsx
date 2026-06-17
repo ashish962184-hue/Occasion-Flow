@@ -5,9 +5,13 @@ export default function Header({
   title = 'Alexandria CRM', 
   searchQuery, 
   onSearchChange, 
+  userAvatar,
+  userName = 'CRM Admin',
   onOpenAddPurchase, 
   onOpenSidebar
 }) {
+  const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=0f172a&color=fff`;
+
   return (
     <header className="sticky top-0 right-0 z-40 flex justify-between items-center h-14 px-4 sm:px-6 w-full bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl border-b border-outline-variant/15 flat no shadows docked top-0">
       {/* Page Title & Sidebar toggle for mobile */}
@@ -78,7 +82,7 @@ export default function Header({
             <img 
               alt="User avatar" 
               className="w-full h-full object-cover ring-2 ring-transparent hover:ring-primary/20 cursor-pointer transition-all" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9egav5LsEekX-9fOPpvEZr7S4GxAXawPORMDvbKAQVd8NxLvKprz007iDeYfUHUEiS6iy3ZCBec_L_XTz2gM_2ZUh-w377sQgYdPjj5HW4rH3GZQoFYL-dpfcSRXTB2Y_iP_ju3DXdAvB9kOZF0Kya2FUmdeUBhirfA3GmYYG-HELjQeHw57RwQaEnKe3rx3T-1imM0RAdTnf1hcunCQBlVcITf90BtMnaaXbV958IpXAxrg6mUO1pmcN4_HLRPlIWLspbgxe9LVa"
+              src={userAvatar || fallbackAvatar}
               referrerPolicy="no-referrer"
             />
           </div>

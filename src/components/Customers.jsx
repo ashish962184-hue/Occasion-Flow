@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, X, MoreVertical, Edit2, Shield, Calendar, Phone, Mail, FileText, Briefcase, DollarSign } from 'lucide-react';
+import { Search, Plus, X, MoreVertical, Edit2, Shield, Calendar, Phone, Mail, FileText, Briefcase, DollarSign, Users } from 'lucide-react';
 
 export default function Customers({ 
   customers, 

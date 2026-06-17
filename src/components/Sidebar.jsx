@@ -11,7 +11,7 @@ import {
   X
 } from 'lucide-react';
 
-export default function Sidebar({ currentScreen, userName, onNavigate, onOpenQuickAdd, isOpen = false, onClose }) {
+export default function Sidebar({ currentScreen, userName, userAvatar, onNavigate, onOpenQuickAdd, isOpen = false, onClose }) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'customers', label: 'Customers', icon: Users },
@@ -20,6 +20,8 @@ export default function Sidebar({ currentScreen, userName, onNavigate, onOpenQui
     { id: 'reminders', label: 'Reminders', icon: Bell },
     { id: 'reports', label: 'Reports', icon: BarChart3 },
   ];
+
+  const initial = userName ? userName.charAt(0).toUpperCase() : 'A';
 
   return (
     <>
@@ -44,21 +46,25 @@ export default function Sidebar({ currentScreen, userName, onNavigate, onOpenQui
                 onNavigate('dashboard');
                 if (onClose) onClose();
               }}
-              className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-xl cursor-pointer"
+              className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-xl cursor-pointer overflow-hidden border border-outline-variant/20 shrink-0"
             >
-              A
+              {userAvatar ? (
+                <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                initial
+              )}
             </div>
-            <div>
+            <div className="overflow-hidden">
               <h1 
                 onClick={() => {
                   onNavigate('dashboard');
                   if (onClose) onClose();
                 }}
-                className="font-headline text-xl font-bold text-on-surface cursor-pointer hover:opacity-90"
+                className="font-headline text-lg font-bold text-on-surface cursor-pointer hover:opacity-90 truncate"
               >
-                Alexandria
+                Alexandria CRM
               </h1>
-              <p className="font-body text-[10px] tracking-tight text-on-surface-variant max-w-[120px] truncate">{userName || 'CRM Admin'}</p>
+              <p className="font-body text-[11px] tracking-tight text-on-surface-variant truncate">{userName || 'CRM Admin'}</p>
             </div>
           </div>
 
@@ -78,10 +84,10 @@ export default function Sidebar({ currentScreen, userName, onNavigate, onOpenQui
               onOpenQuickAdd();
               if (onClose) onClose();
             }}
-            className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-label text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+            className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-tertiary to-[#a47e3c] dark:to-[#b8860b] text-white font-label text-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-sm hover:shadow-md cursor-pointer border border-[#c49a3b]/20"
           >
-            <Plus size={18} />
-            Quick Add
+            <Plus size={18} strokeWidth={2.5} />
+            <span>Quick Add</span>
           </button>
         </div>
 

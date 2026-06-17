@@ -1,19 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { User, Bell, Shield, Palette, Save, CheckCircle } from 'lucide-react';
 
-export default function Settings() {
+export default function Settings({ settings, onSaveSettings }) {
   const [activeTab, setActiveTab] = useState('profile');
   const [isSaved, setIsSaved] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Form states
-  const [name, setName] = useState('Alexandria Admin');
-  const [email, setEmail] = useState('admin@alexandria.local');
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [smsNotifications, setSmsNotifications] = useState(false);
-  const [theme, setTheme] = useState('system');
+  const [name, setName] = useState(settings?.name || 'Alexandria Admin');
+  const [email, setEmail] = useState(settings?.email || 'admin@alexandria.local');
+  const [emailNotifications, setEmailNotifications] = useState(settings?.emailNotifications ?? true);
+  const [smsNotifications, setSmsNotifications] = useState(settings?.smsNotifications ?? false);
+  const [theme, setTheme] = useState(settings?.theme || 'system');
+  const [avatar, setAvatar] = useState(settings?.avatar || null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 800 * 1024) {
+        alert("File size exceeds 800K");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
+    if (onSaveSettings) {
+      onSaveSettings({ name, email, emailNotifications, smsNotifications, theme, avatar });
+    }
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 3000);
   };
@@ -80,9 +100,12 @@ export default function Settings() {
                 <h3 className="font-headline text-lg font-bold text-on-surface border-b border-outline-variant/10 pb-3">Personal Information</h3>
                 
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 rounded-full bg-surface-container-highest border border-outline-variant/20 overflow-hidden relative group cursor-pointer">
+                  <div 
+                    className="w-20 h-20 rounded-full bg-surface-container-highest border border-outline-variant/20 overflow-hidden relative group cursor-pointer"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
                     <img 
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9egav5LsEekX-9fOPpvEZr7S4GxAXawPORMDvbKAQVd8NxLvKprz007iDeYfUHUEiS6iy3ZCBec_L_XTz2gM_2ZUh-w377sQgYdPjj5HW4rH3GZQoFYL-dpfcSRXTB2Y_iP_ju3DXdAvB9kOZF0Kya2FUmdeUBhirfA3GmYYG-HELjQeHw57RwQaEnKe3rx3T-1imM0RAdTnf1hcunCQBlVcITf90BtMnaaXbV958IpXAxrg6mUO1pmcN4_HLRPlIWLspbgxe9LVa" 
+                      src={avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0f172a&color=fff`} 
                       alt="Avatar" 
                       className="w-full h-full object-cover"
                     />
@@ -90,11 +113,33 @@ export default function Settings() {
                       <span className="text-white text-[10px] font-bold uppercase tracking-wider">Change</span>
                     </div>
                   </div>
-                  <div>
-                    <button type="button" className="px-4 py-2 bg-surface-container text-on-surface hover:bg-surface-container-highest rounded-lg font-label text-sm font-bold transition-colors">
-                      Upload Avatar
-                    </button>
-                    <p className="text-xs text-on-surface-variant mt-2 font-body">JPG, GIF or PNG. Max size of 800K</p>
+                  <div className="flex flex-col items-start gap-2">
+                    <div className="flex gap-2">
+                      <button 
+                        type="button" 
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-4 py-2 bg-surface-container text-on-surface hover:bg-surface-container-highest rounded-lg font-label text-sm font-bold transition-colors"
+                      >
+                        Upload Avatar
+                      </button>
+                      {avatar && (
+                        <button 
+                          type="button" 
+                          onClick={() => setAvatar(null)}
+                          className="px-4 py-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-lg font-label text-sm font-bold transition-colors"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-xs text-on-surface-variant font-body">JPG, GIF or PNG. Max size of 800K</p>
+                    <input 
+                      type="file" 
+                      accept="image/jpeg, image/png, image/gif" 
+                      className="hidden" 
+                      ref={fileInputRef} 
+                      onChange={handleFileChange}
+                    />
                   </div>
                 </div>
 

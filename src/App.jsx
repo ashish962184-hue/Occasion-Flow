@@ -109,12 +109,12 @@ export default function App() {
         fetch('/api/reports')
       ]);
 
-      if (resDash.ok) setDashboardData(await resDash.json());
-      if (resC.ok) setCustomers(await resC.json());
-      if (resO.ok) setOccasions(await resO.json());
-      if (resP.ok) setPurchaseHistory(await resP.json());
-      if (resR.ok) setReminders(await resR.json());
-      if (resRep.ok) setReportsData(await resRep.json());
+      if (resDash.ok) setDashboardData((await resDash.json()).data);
+      if (resC.ok) setCustomers((await resC.json()).data);
+      if (resO.ok) setOccasions((await resO.json()).data);
+      if (resP.ok) setPurchaseHistory((await resP.json()).data);
+      if (resR.ok) setReminders((await resR.json()).data);
+      if (resRep.ok) setReportsData((await resRep.json()).data);
 
     } catch (err) {
       console.error('[REST Error]', err);
@@ -129,8 +129,8 @@ export default function App() {
     try {
       const res = await fetch(`/api/customers/${id}`);
       if (res.ok) {
-        const detail = await res.json();
-        setCurrentCustomerDetail(detail);
+        const payload = await res.json();
+        setCurrentCustomerDetail(payload.data);
       } else {
         triggerToast('Client profile data loading error.', 'error');
       }
@@ -304,10 +304,11 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface-dim font-sans antialiased text-[#1a1a1a]">
+    <div className="min-h-screen bg-surface-dim font-sans antialiased text-on-surface transition-colors duration-300">
       <Sidebar 
         currentScreen={currentScreen} 
         userName={settings.name}
+        userAvatar={settings.avatar}
         onNavigate={handleNavigate} 
         onOpenQuickAdd={() => {
           setQOccCust(customers[0]?.id || '');
@@ -331,6 +332,8 @@ export default function App() {
           }
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          userAvatar={settings.avatar}
+          userName={settings.name}
           onOpenAddPurchase={() => {
             setQGiftCust(customers[0]?.id || '');
             setQuickAddTab('purchase');
