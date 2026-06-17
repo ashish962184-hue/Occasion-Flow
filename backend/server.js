@@ -52,6 +52,11 @@ app.use("/api/reminders", reminderRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/workflow", workflowRoutes);
 
+// Catch-all for debugging Vercel routing
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found", url: req.url, originalUrl: req.originalUrl });
+});
+
 if (process.env.NODE_ENV !== 'production') {
   app.listen(5000, () => {
     console.log("Server running on port 5000");
