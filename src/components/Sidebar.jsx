@@ -48,14 +48,10 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
                 onNavigate('dashboard');
                 if (onClose) onClose();
               }}
-              className="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-bold text-xl cursor-pointer overflow-hidden border border-outline-variant/20 shrink-0 mx-auto lg:mx-0"
+              className="w-10 h-10 rounded-lg bg-transparent flex items-center justify-center cursor-pointer overflow-hidden shrink-0 mx-auto lg:mx-0"
               title="Dashboard"
             >
-              {userAvatar ? (
-                <img src={userAvatar} alt="Profile" className="w-full h-full object-cover" />
-              ) : (
-                initial
-              )}
+              <img src="/logo.png" alt="Occasion Flow Logo" className="w-full h-full object-cover" />
             </div>
             {!isCollapsed && (
               <div className="overflow-hidden animate-fadeIn">
@@ -64,11 +60,11 @@ export default function Sidebar({ currentScreen, userName, userAvatar, onNavigat
                     onNavigate('dashboard');
                     if (onClose) onClose();
                   }}
-                  className="font-headline text-[12px] leading-tight font-bold text-on-surface cursor-pointer hover:opacity-90 tracking-wide uppercase"
+                  className="font-headline text-[14px] leading-tight font-bold text-on-surface cursor-pointer hover:opacity-90 tracking-wide uppercase"
                 >
-                  Concierge CRM
+                  Occasion Flow
                 </h1>
-                <p className="font-body text-[10px] tracking-widest text-on-surface-variant truncate uppercase mt-0.5">{userName || 'CRM Admin'}</p>
+                <p className="font-body text-[10px] tracking-widest text-on-surface-variant truncate uppercase mt-0.5">{userName || 'Admin'}</p>
               </div>
             )}
           </div>

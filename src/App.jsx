@@ -36,8 +36,8 @@ export default function App() {
   const [settings, setSettings] = useState(() => {
     const saved = localStorage.getItem('crm_settings');
     return saved ? JSON.parse(saved) : {
-      name: 'Concierge Admin',
-      email: 'admin@concierge.local',
+      name: 'Occasion Flow Admin',
+      email: 'admin@occasionflow.com',
       theme: 'system',
       emailNotifications: true,
       smsNotifications: false
@@ -363,7 +363,7 @@ export default function App() {
       <div className={`flex flex-col min-h-screen transition-all duration-300 ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'}`}>
         <Header  
           title={
-            currentScreen === 'dashboard' ? 'Concierge Hub' : 
+            currentScreen === 'dashboard' ? 'Occasion Flow' : 
             currentScreen === 'customers' ? 'Clients Directory' : 
             currentScreen === 'occasions' ? 'Milestones Calendar' : 
             currentScreen === 'purchase-history' ? 'Purchase Ledger' : 
@@ -388,7 +388,7 @@ export default function App() {
           {isLoading && !selectedCustomerId && !dashboardData ? (
             <div className="flex flex-col items-center justify-center py-44 gap-3">
               <Loader2 className="text-primary animate-spin" size={32} />
-              <p className="font-label text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Syncing Concierge Ledger...</p>
+              <p className="font-label text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Syncing Occasion Flow...</p>
             </div>
           ) : (
             <>

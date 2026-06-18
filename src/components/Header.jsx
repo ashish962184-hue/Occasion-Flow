@@ -165,7 +165,7 @@ export default function Header({
               <div className="absolute right-0 mt-2 w-48 bg-surface-container-lowest border border-outline-variant/20 rounded-xl shadow-lg z-50 overflow-hidden animate-fadeIn py-1">
                 <div className="px-4 py-3 border-b border-outline-variant/15 bg-surface-container-low mb-1">
                   <p className="font-headline font-bold text-sm text-on-surface truncate">{userName}</p>
-                  <p className="font-body text-xs text-on-surface-variant truncate">admin@concierge.com</p>
+                  <p className="font-body text-xs text-on-surface-variant truncate">admin@occasionflow.com</p>
                 </div>
                 
                 <button 

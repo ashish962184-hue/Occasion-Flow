@@ -473,7 +473,7 @@ export default function GiftHistory({
             </div>
 
             <div className="space-y-2 border-t border-outline-variant/15 pt-4">
-              <span className="text-[10px] font-label text-on-surface-variant uppercase font-bold tracking-wider">Concierge Log Notes</span>
+              <span className="text-[10px] font-label text-on-surface-variant uppercase font-bold tracking-wider">Admin Log Notes</span>
               <p className="text-xs text-on-surface-variant leading-relaxed bg-surface-container-low/50 border border-outline-variant/15 rounded-xl p-3.5 italic whitespace-pre-wrap font-body">
                 {selectedOrder.notes || '"No custom logistical annotations recorded for this premium curation."'}
               </p>
@@ -483,7 +483,7 @@ export default function GiftHistory({
           <div className="bg-surface border border-outline-variant/15 rounded-2xl p-8 shadow-sm text-center">
             <ShoppingBag size={40} className="text-outline/40 mx-auto mb-3" />
             <h4 className="font-headline font-semibold text-base text-on-surface">Select a Log</h4>
-            <p className="font-body text-xs text-on-surface-variant mt-1">Select any item in the history ledger of gift-orders to view concierge annotations, invoices, and active tracking codes.</p>
+            <p className="font-body text-xs text-on-surface-variant mt-1">Select any item in the history ledger of gift-orders to view admin annotations, invoices, and active tracking codes.</p>
           </div>
         )}
       </aside>
@@ -563,7 +563,7 @@ export default function GiftHistory({
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="font-label text-xs font-semibold text-on-surface-variant">Concierge Logistics Annotation</label>
+                <label className="font-label text-xs font-semibold text-on-surface-variant">Admin Logistics Annotation</label>
                 <textarea 
                   value={notes} 
                   onChange={e => setNotes(e.target.value)} 
