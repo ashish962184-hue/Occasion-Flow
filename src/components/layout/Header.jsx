@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, PlusCircle, Menu, Bell, User, Settings, LogOut, Check } from 'lucide-react';
+import { Search, PlusCircle, Menu, Bell, User, Settings, Check } from 'lucide-react';
 
 export default function Header({ 
   title = 'Gifting Occasion Calendar & Customer Relationship Tracker', 
@@ -181,14 +181,6 @@ export default function Header({
                   <Settings size={14} className="text-on-surface-variant" /> Settings
                 </button>
                 
-                <div className="h-px bg-outline-variant/15 my-1 mx-2"></div>
-                
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="w-full text-left px-4 py-2 text-sm font-body font-medium text-error hover:bg-error/10 transition-colors flex items-center gap-2 cursor-pointer"
-                >
-                  <LogOut size={14} /> Log Out
-                </button>
               </div>
             )}
           </div>
