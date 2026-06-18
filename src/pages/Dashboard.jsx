@@ -9,9 +9,8 @@ export default function Dashboard({ metrics, occasions = [], reminders = [], onN
 
   const upcomingOccs = occasions.filter(o => {
     if (!o.occasion_date) return false;
-    const parts = o.occasion_date.split('-');
-    if (parts.length !== 3) return false;
-    const occDate = new Date(parts[0], parts[1] - 1, parts[2]);
+    const occDate = new Date(o.occasion_date);
+    occDate.setHours(0,0,0,0);
     
     // Check if within next 30 days
     const diffDays = (occDate - today) / (1000 * 3600 * 24);
@@ -23,8 +22,8 @@ export default function Dashboard({ metrics, occasions = [], reminders = [], onN
 
   const getWeekOccasionsCount = (type) => {
     return upcomingOccs.filter(o => {
-      const parts = o.occasion_date.split('-');
-      const occDate = new Date(parts[0], parts[1] - 1, parts[2]);
+      const occDate = new Date(o.occasion_date);
+      occDate.setHours(0,0,0,0);
       const diffDays = (occDate - today) / (1000 * 3600 * 24);
       return o.occasion_type === type && diffDays >= 0 && diffDays <= 7;
     }).length;
@@ -113,8 +112,8 @@ export default function Dashboard({ metrics, occasions = [], reminders = [], onN
               <tbody>
                 {upcomingOccs.length > 0 ? (
                   upcomingOccs.slice(0, 10).map((occ, idx) => {
-                    const parts = occ.occasion_date.split('-');
-                    const rDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                    const occDate = new Date(occ.occasion_date);
+                    const rDate = new Date(occDate);
                     rDate.setDate(rDate.getDate() - occ.reminder_days);
 
                     return (

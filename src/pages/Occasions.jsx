@@ -64,9 +64,8 @@ export default function Occasions({
 
     if (!o.occasion_date) return true;
     
-    const parts = o.occasion_date.split('-');
-    if (parts.length !== 3) return true;
-    const occDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+    const occDateObj = new Date(o.occasion_date);
+    occDateObj.setHours(0,0,0,0);
     
     if (viewMode === 'Month') {
       return occDateObj.getMonth() === currentDate.getMonth() && 
@@ -198,7 +197,7 @@ export default function Occasions({
               {filtered.length > 0 ? filtered.map((o) => (
                 <tr key={o.id} className="border-b border-outline-variant/10 hover:bg-surface-container-highest/20 transition-colors group">
                   <td className="px-6 py-4 font-mono text-sm text-on-surface-variant">
-                    {o.occasion_date}
+                    {new Date(o.occasion_date).toISOString().split('T')[0]}
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-body text-sm font-bold text-on-surface cursor-pointer hover:text-primary" onClick={() => onNavigateToCustomer(o.customer_id)}>
@@ -259,7 +258,7 @@ export default function Occasions({
             <div key={o.id} className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group flex flex-col h-full relative">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex flex-col">
-                  <span className="font-mono text-xs text-on-surface-variant mb-1">{o.occasion_date}</span>
+                  <span className="font-mono text-xs text-on-surface-variant mb-1">{new Date(o.occasion_date).toISOString().split('T')[0]}</span>
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider w-fit ${
                     o.status === 'Completed' ? 'bg-tertiary/15 text-tertiary' :
                     o.status === 'Triggered' ? 'bg-[#eab308]/15 text-[#ca8a04]' :
