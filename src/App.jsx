@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import Dashboard from './components/Dashboard';
-import Customers from './components/Customers';
-import Occasions from './components/Occasions';
-import PurchaseHistory from './components/PurchaseHistory';
-import Reminders from './components/Reminders';
-import Reports from './components/Reports';
-import CustomerDetail from './components/CustomerDetail';
-import Settings from './components/Settings';
+import Sidebar from './components/layout/Sidebar';
+import Header from './components/layout/Header';
+import Dashboard from './pages/Dashboard';
+import Customers from './pages/Customers';
+import Occasions from './pages/Occasions';
+import PurchaseHistory from './pages/PurchaseHistory';
+import Reminders from './pages/Reminders';
+import Reports from './pages/Reports';
+import CustomerDetail from './pages/CustomerDetail';
+import Settings from './pages/Settings';
 import { 
   Plus, 
   X, 
