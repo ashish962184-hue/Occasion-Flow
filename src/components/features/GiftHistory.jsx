@@ -69,7 +69,7 @@ export default function GiftHistory({
     if (endDate && g.purchase_date > endDate) return false;
 
     // 4. Amount Range Filter
-    const val = g.amount;
+    const val = Number(g.amount);
     if (minAmount && val < parseFloat(minAmount)) return false;
     if (maxAmount && val > parseFloat(maxAmount)) return false;
 
@@ -87,7 +87,7 @@ export default function GiftHistory({
   });
 
   // Derive metrics over the filtered set for luxury dynamic feedback!
-  const totalSpend = filteredOrders.reduce((sum, g) => sum + g.amount, 0);
+  const totalSpend = filteredOrders.reduce((sum, g) => sum + Number(g.amount), 0);
   const activeDeliveries = filteredOrders.filter(g => g.status === 'Processing' || g.status === 'Shipped').length;
   
   // Calculate average order
@@ -362,7 +362,7 @@ export default function GiftHistory({
                     </td>
                     <td className="px-5 py-3.5 font-medium text-on-surface-variant max-w-[150px] truncate">{order.gift_name}</td>
                     <td className="px-5 py-3.5"><span className="text-xs bg-surface-container text-on-surface-variant px-2.5 py-0.5 rounded-full">{order.category}</span></td>
-                    <td className="px-5 py-3.5 text-right font-mono font-medium">${order.amount.toFixed(2)}</td>
+                    <td className="px-5 py-3.5 text-right font-mono font-medium">${Number(order.amount).toFixed(2)}</td>
                     <td className="px-5 py-3.5 font-mono text-xs text-on-surface-variant">{order.purchase_date}</td>
                     <td className="px-5 py-3.5">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold leading-normal font-label uppercase ${stampColor}`}>
@@ -441,7 +441,7 @@ export default function GiftHistory({
               <div className="border-t border-outline-variant/15 pt-3 flex justify-between items-end">
                 <div>
                   <span className="text-[10px] font-label text-on-surface-variant uppercase font-bold">Financing</span>
-                  <div className="font-mono text-lg sm:text-xl font-bold text-on-surface mt-0.5">${selectedOrder.amount.toFixed(2)}</div>
+                  <div className="font-mono text-lg sm:text-xl font-bold text-on-surface mt-0.5">${Number(selectedOrder.amount).toFixed(2)}</div>
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] font-label text-on-surface-variant uppercase font-bold">Purchase Date</span>

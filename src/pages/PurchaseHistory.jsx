@@ -107,7 +107,7 @@ export default function PurchaseHistory({
                  return (
                 <tr key={p.id} className="border-b border-outline-variant/10 hover:bg-surface-container-highest/20 transition-colors group">
                   <td className="px-6 py-4 font-mono text-sm text-on-surface-variant">
-                    {p.order_date}
+                    {new Date(p.order_date).toISOString().split('T')[0]}
                   </td>
                   <td className="px-6 py-4">
                     <div className="font-body text-sm font-bold text-on-surface cursor-pointer hover:text-primary" onClick={() => onNavigateToCustomer(p.customer_id)}>
@@ -119,7 +119,7 @@ export default function PurchaseHistory({
                     {isRepeat && <span className="inline-block mt-1 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#22c55e]/15 text-[#16a34a]">Repeat Opp</span>}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="font-headline text-sm font-bold text-on-surface">${p.amount.toFixed(2)}</div>
+                    <div className="font-headline text-sm font-bold text-on-surface">${Number(p.amount).toFixed(2)}</div>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -152,8 +152,8 @@ export default function PurchaseHistory({
               <div key={p.id} className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group flex flex-col h-full relative">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex flex-col">
-                    <span className="font-mono text-xs text-on-surface-variant mb-1">{p.order_date}</span>
-                    <span className="font-headline text-sm font-bold text-on-surface">${p.amount.toFixed(2)}</span>
+                    <span className="font-mono text-xs text-on-surface-variant mb-1">{new Date(p.order_date).toISOString().split('T')[0]}</span>
+                    <span className="font-headline text-sm font-bold text-on-surface">${Number(p.amount).toFixed(2)}</span>
                   </div>
                   <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => onNavigateToCustomer(p.customer_id)} className="p-1 text-on-surface-variant hover:text-primary" title="View Customer"><Eye size={14}/></button>
