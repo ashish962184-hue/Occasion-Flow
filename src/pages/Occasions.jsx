@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, Calendar as CalendarIcon, Edit2, ChevronLeft, ChevronRight, Eye, Trash2, LayoutGrid, List } from 'lucide-react';
+import { Search, Plus, Calendar as CalendarIcon, Edit2, ChevronLeft, ChevronRight, Eye, Trash2, LayoutGrid, List, CheckCircle } from 'lucide-react';
 
 export default function Occasions({ 
   occasions, 
