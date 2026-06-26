@@ -1,4 +1,5 @@
 const Occasion = require("../models/Occasion");
+const reminderEngine = require("../services/reminderEngine");
 
 exports.createOccasion = (req, res) => {
   Occasion.create(req.body, (err, result) => {
@@ -13,7 +14,9 @@ exports.createOccasion = (req, res) => {
   });
 };
 
-exports.getOccasions = (req, res) => {
+exports.getOccasions = async (req, res) => {
+  await reminderEngine.run(); // ensure states are dynamically updated
+
   Occasion.getAll((err, results) => {
     if (err) {
       return res.status(500).json(err);

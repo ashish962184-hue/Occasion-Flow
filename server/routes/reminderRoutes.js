@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    getUpcomingOccasions
+    getReminders,
+    updateReminder
 } = require("../services/reminderService");
 
-router.get("/", getUpcomingOccasions);
+router.get("/", getReminders);
+router.put("/:id", updateReminder);
 
 module.exports = router;

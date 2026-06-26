@@ -211,6 +211,7 @@ export default function Occasions({
                     <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                       o.status === 'Completed' ? 'bg-tertiary/15 text-tertiary' :
                       o.status === 'Triggered' ? 'bg-[#eab308]/15 text-[#ca8a04]' :
+                      o.status === 'Due Today' ? 'bg-blue-500/15 text-blue-600' :
                       o.status === 'Missed' ? 'bg-error/15 text-error' :
                       'bg-primary/10 text-primary'
                     }`}>
@@ -232,6 +233,15 @@ export default function Occasions({
                       >
                         <Eye size={16} />
                       </button>
+                      {o.status !== 'Completed' && (
+                        <button 
+                          onClick={() => onEditOccasion(o.id, { ...o, status: 'Completed' })}
+                          className="p-1.5 text-on-surface-variant hover:text-tertiary bg-surface-container hover:bg-tertiary/10 rounded-md transition-colors"
+                          title="Mark Completed"
+                        >
+                          <CheckCircle size={16} />
+                        </button>
+                      )}
                       <button 
                         onClick={() => onDeleteOccasion(o.id)}
                         className="p-1.5 text-on-surface-variant hover:text-error bg-surface-container hover:bg-error/10 rounded-md transition-colors"
@@ -262,15 +272,19 @@ export default function Occasions({
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider w-fit ${
                     o.status === 'Completed' ? 'bg-tertiary/15 text-tertiary' :
                     o.status === 'Triggered' ? 'bg-[#eab308]/15 text-[#ca8a04]' :
+                    o.status === 'Due Today' ? 'bg-blue-500/15 text-blue-600' :
                     o.status === 'Missed' ? 'bg-error/15 text-error' :
                     'bg-primary/10 text-primary'
                   }`}>
                     {o.status}
                   </span>
                 </div>
-                <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => handleOpenEdit(o)} className="p-1 text-on-surface-variant hover:text-primary"><Edit2 size={14}/></button>
-                  <button onClick={() => onDeleteOccasion(o.id)} className="p-1 text-on-surface-variant hover:text-error"><Trash2 size={14}/></button>
+                <div className="flex opacity-0 group-hover:opacity-100 transition-opacity gap-1 bg-surface-container-low p-1 rounded-lg">
+                  {o.status !== 'Completed' && (
+                    <button onClick={() => onEditOccasion(o.id, { ...o, status: 'Completed' })} className="p-1 text-on-surface-variant hover:text-tertiary" title="Mark Completed"><CheckCircle size={14}/></button>
+                  )}
+                  <button onClick={() => handleOpenEdit(o)} className="p-1 text-on-surface-variant hover:text-primary" title="Edit"><Edit2 size={14}/></button>
+                  <button onClick={() => onDeleteOccasion(o.id)} className="p-1 text-on-surface-variant hover:text-error" title="Delete"><Trash2 size={14}/></button>
                 </div>
               </div>
 

@@ -7,8 +7,8 @@ export default function Reminders({ reminders, onUpdateReminder, onNavigateToCus
     r.status?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const pendingReminders = filtered.filter(r => r.status === 'Triggered' || r.status === 'Snoozed');
-  const pastReminders = filtered.filter(r => r.status === 'Dismissed');
+  const pendingReminders = filtered.filter(r => r.status === 'Pending' || r.status === 'Snoozed');
+  const pastReminders = filtered.filter(r => r.status === 'Completed' || r.status === 'Dismissed');
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -58,10 +58,10 @@ export default function Reminders({ reminders, onUpdateReminder, onNavigateToCus
                   <Clock size={14} /> Snooze
                 </button>
                 <button 
-                  onClick={() => onUpdateReminder(r.id, { status: 'Dismissed' })}
-                  className="px-3 py-1.5 text-xs font-bold text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors flex items-center gap-1.5"
+                  onClick={() => onUpdateReminder(r.id, { status: 'Completed' })}
+                  className="px-3 py-1.5 text-xs font-bold text-tertiary bg-tertiary/10 hover:bg-tertiary/20 rounded-lg transition-colors flex items-center gap-1.5"
                 >
-                  <Check size={14} /> Dismiss
+                  <CheckCircle size={14} /> Complete
                 </button>
               </div>
             </div>
@@ -74,16 +74,16 @@ export default function Reminders({ reminders, onUpdateReminder, onNavigateToCus
 
           {pastReminders.length > 0 && (
             <div className="mt-8">
-              <h4 className="font-label text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant/10 pb-2">Dismissed</h4>
+              <h4 className="font-label text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant/10 pb-2">Completed / Dismissed</h4>
               <div className="space-y-3 opacity-60">
                 {pastReminders.map(r => (
                   <div key={r.id} className="p-3 border border-outline-variant/15 rounded-xl bg-surface-container flex justify-between items-center">
                     <div>
                       <span className="font-body text-sm font-bold text-on-surface">{r.customer_name}</span>
-                      <span className="text-xs text-on-surface-variant ml-2">Event on {r.scheduled_date}</span>
+                      <span className="text-xs text-on-surface-variant ml-2">{r.occasion_name} on {new Date(r.scheduled_date).toISOString().split('T')[0]}</span>
                     </div>
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-surface-container-highest text-on-surface-variant">
-                      Dismissed
+                      {r.status}
                     </span>
                   </div>
                 ))}
