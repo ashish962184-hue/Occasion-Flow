@@ -382,6 +382,7 @@ export default function App() {
           }}
           onOpenSidebar={() => setIsSidebarOpen(true)}
           onNavigate={handleNavigate}
+          reminders={reminders}
         />
 
         <div className="flex-1 p-4 sm:p-8 overflow-y-auto">

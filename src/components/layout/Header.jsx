@@ -9,7 +9,8 @@ export default function Header({
   userName = 'CRM Admin',
   onOpenAddPurchase, 
   onOpenSidebar,
-  onNavigate
+  onNavigate,
+  reminders = []
 }) {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -104,7 +105,9 @@ export default function Header({
               className="relative p-1.5 text-on-surface-variant hover:text-on-surface transition-colors rounded-full hover:bg-surface-container-highest/50 cursor-pointer"
             >
               <Bell size={18} strokeWidth={1.5} />
-              <span className="absolute top-1 right-1.5 w-1.5 h-1.5 bg-[#ca8a04] rounded-full ring-2 ring-surface"></span>
+              {(reminders || []).filter(r => ['Pending', 'Triggered', 'Snoozed'].includes(r.status)).length > 0 && (
+                <span className="absolute top-1 right-1.5 w-1.5 h-1.5 bg-[#ca8a04] rounded-full ring-2 ring-surface"></span>
+              )}
             </button>
             
             {/* Notification Dropdown */}
@@ -115,24 +118,23 @@ export default function Header({
                   <span className="text-[10px] font-bold uppercase tracking-wider text-primary cursor-pointer hover:underline">Mark all read</span>
                 </div>
                 <div className="max-h-64 overflow-y-auto p-2">
-                  <div className="p-2 flex gap-3 hover:bg-surface-container-highest/30 rounded-lg transition-colors cursor-pointer group">
-                    <div className="mt-1 p-1.5 bg-primary/10 text-primary rounded-full shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors">
-                      <Bell size={12} />
+                  {(reminders || []).filter(r => ['Pending', 'Triggered', 'Snoozed'].includes(r.status)).length > 0 ? (
+                    (reminders || []).filter(r => ['Pending', 'Triggered', 'Snoozed'].includes(r.status)).map(r => (
+                      <div key={r.id} className="p-2 flex gap-3 hover:bg-surface-container-highest/30 rounded-lg transition-colors cursor-pointer group" onClick={() => { setIsNotifOpen(false); onNavigate('reminders'); }}>
+                        <div className="mt-1 p-1.5 bg-primary/10 text-primary rounded-full shrink-0 group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                          <Bell size={12} />
+                        </div>
+                        <div>
+                          <p className="font-body text-sm text-on-surface font-medium leading-tight">Reminder: {r.customer_name}'s {r.occasion_name}</p>
+                          <p className="font-body text-xs text-on-surface-variant mt-1">{new Date(r.scheduled_date).toISOString().split('T')[0]}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center">
+                      <p className="font-body text-sm text-on-surface-variant">No new notifications.</p>
                     </div>
-                    <div>
-                      <p className="font-body text-sm text-on-surface font-medium leading-tight">Reminder triggered: Sylvia Vance's Birthday</p>
-                      <p className="font-body text-xs text-on-surface-variant mt-1">2 hours ago</p>
-                    </div>
-                  </div>
-                  <div className="p-2 flex gap-3 hover:bg-surface-container-highest/30 rounded-lg transition-colors cursor-pointer group">
-                    <div className="mt-1 p-1.5 bg-[#ca8a04]/10 text-[#ca8a04] rounded-full shrink-0 group-hover:bg-[#ca8a04] group-hover:text-white transition-colors">
-                      <Check size={12} />
-                    </div>
-                    <div>
-                      <p className="font-body text-sm text-on-surface font-medium leading-tight">New customer created successfully.</p>
-                      <p className="font-body text-xs text-on-surface-variant mt-1">Yesterday</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
                 <div className="p-2 border-t border-outline-variant/15 text-center bg-surface-container-low">
                   <button 

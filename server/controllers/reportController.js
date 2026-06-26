@@ -21,6 +21,22 @@ const getReports = async (req, res) => {
 
     const remindersRes = await query("SELECT COUNT(*) AS count FROM reminders WHERE status = 'Pending'");
 
+    const monthlyRevRes = await query(`
+      SELECT 
+        to_char(order_date, 'Mon') as month_name,
+        to_char(order_date, 'YYYY-MM') as sort_key,
+        SUM(amount) as revenue
+      FROM orders
+      GROUP BY to_char(order_date, 'Mon'), to_char(order_date, 'YYYY-MM')
+      ORDER BY sort_key ASC
+      LIMIT 12
+    `);
+
+    const monthlyRevenue = {};
+    monthlyRevRes.forEach(row => {
+      monthlyRevenue[row.month_name] = parseFloat(row.revenue) || 0;
+    });
+
     res.json({
       success: true,
       data: {
@@ -38,7 +54,8 @@ const getReports = async (req, res) => {
         },
         reminderSummary: {
           totalReminders: parseInt(remindersRes[0].count, 10) || 0
-        }
+        },
+        monthlyRevenue
       }
     });
   } catch (err) {
