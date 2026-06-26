@@ -1,7 +1,7 @@
 import React from 'react';
-import { Users, Calendar, Clock, RotateCw, Activity, ArrowRight, Eye, Play } from 'lucide-react';
+import { Users, Calendar, Clock, RotateCw, Activity, ArrowRight, Eye, Play, CheckCircle } from 'lucide-react';
 
-export default function Dashboard({ metrics, occasions = [], reminders = [], onNavigateToCustomer, onNavigateToAllOccasions }) {
+export default function Dashboard({ metrics, occasions = [], reminders = [], onNavigateToCustomer, onNavigateToAllOccasions, onEditOccasion }) {
   if (!metrics) return null;
 
   const today = new Date();
@@ -138,13 +138,24 @@ export default function Dashboard({ metrics, occasions = [], reminders = [], onN
                           </span>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <button 
-                            onClick={() => onNavigateToCustomer(occ.customer_id)}
-                            className="inline-flex items-center justify-center p-1.5 text-on-surface-variant hover:text-primary bg-surface-container hover:bg-primary-container/20 rounded-md transition-colors"
-                            title="Open Detail"
-                          >
-                            <Eye size={16} />
-                          </button>
+                          <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {occ.status !== 'Completed' && onEditOccasion && (
+                              <button 
+                                onClick={() => onEditOccasion(occ.id, { ...occ, status: 'Completed' })}
+                                className="inline-flex items-center justify-center p-1.5 text-on-surface-variant hover:text-tertiary bg-surface-container hover:bg-tertiary/10 rounded-md transition-colors"
+                                title="Mark Completed"
+                              >
+                                <CheckCircle size={16} />
+                              </button>
+                            )}
+                            <button 
+                              onClick={() => onNavigateToCustomer(occ.customer_id)}
+                              className="inline-flex items-center justify-center p-1.5 text-on-surface-variant hover:text-primary bg-surface-container hover:bg-primary-container/20 rounded-md transition-colors"
+                              title="Open Detail"
+                            >
+                              <Eye size={16} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

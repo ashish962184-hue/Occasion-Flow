@@ -400,6 +400,7 @@ export default function App() {
                   reminders={reminders}
                   onNavigateToCustomer={handleNavigateToCustomerDetail}
                   onNavigateToAllOccasions={() => handleNavigate('occasions')}
+                  onEditOccasion={handleEditOccasion}
                 />
               )}
 
