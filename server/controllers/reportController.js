@@ -40,21 +40,13 @@ const getReports = async (req, res) => {
     res.json({
       success: true,
       data: {
-        customerSummary: {
-          totalCustomers: parseInt(totalCustomersRes[0].totalCustomers, 10) || 0,
-          vipCount: parseInt(vipRes[0].count, 10) || 0,
-          standardCount: parseInt(standardRes[0].count, 10) || 0
-        },
-        occasionSummary: {
-          totalOccasions: parseInt(upcomingOccasionsRes[0].count, 10) || 0
-        },
-        purchaseSummary: {
-          totalPurchases: parseInt(purchaseRes[0].totalPurchases, 10) || 0,
-          totalRevenue: parseFloat(purchaseRes[0].totalRevenue) || 0
-        },
-        reminderSummary: {
-          totalReminders: parseInt(remindersRes[0].count, 10) || 0
-        },
+        totalCustomers: parseInt(totalCustomersRes[0].totalCustomers, 10) || 0,
+        vipCount: parseInt(vipRes[0].count, 10) || 0,
+        standardCount: parseInt(standardRes[0].count, 10) || 0,
+        totalOccasions: parseInt(upcomingOccasionsRes[0].count, 10) || 0,
+        totalPurchases: parseInt(purchaseRes[0].totalPurchases, 10) || 0,
+        totalRevenue: parseFloat(purchaseRes[0].totalRevenue) || 0,
+        totalReminders: parseInt(remindersRes[0].count, 10) || 0,
         monthlyRevenue
       }
     });
