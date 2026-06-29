@@ -611,7 +611,7 @@ export default function App() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label className="font-label text-xs font-semibold text-on-surface-variant">Amount ($) *</label>
-                      <input required type="number" step="0.01" value={qGiftAmt} onChange={e=>setQGiftAmt(e.target.value)} className="bg-background border border-outline-variant/50 rounded-lg px-3.5 py-1.5 text-sm outline-none focus:border-primary" />
+                      <input required type="number" min="0" step="0.01" value={qGiftAmt} onChange={e=>setQGiftAmt(e.target.value)} className="bg-background border border-outline-variant/50 rounded-lg px-3.5 py-1.5 text-sm outline-none focus:border-primary" />
                     </div>
                     <div className="flex flex-col gap-1.5">
                       <label className="font-label text-xs font-semibold text-on-surface-variant">Date *</label>

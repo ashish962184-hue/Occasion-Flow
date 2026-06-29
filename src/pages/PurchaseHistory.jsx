@@ -196,7 +196,7 @@ export default function PurchaseHistory({
               </div>
               <div>
                 <label className="font-label text-xs font-semibold text-on-surface-variant">Amount *</label>
-                <input required type="number" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)} className="w-full mt-1 bg-background border border-outline-variant/50 rounded-lg px-3 py-2 text-sm" />
+                <input required type="number" min="0" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)} className="w-full mt-1 bg-background border border-outline-variant/50 rounded-lg px-3 py-2 text-sm" />
               </div>
               <div>
                 <label className="font-label text-xs font-semibold text-on-surface-variant">Date *</label>
