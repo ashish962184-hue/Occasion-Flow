@@ -219,7 +219,7 @@ export default function Occasions({
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-2 transition-opacity">
                       <button 
                         onClick={() => handleOpenEdit(o)}
                         className="p-1.5 text-on-surface-variant hover:text-primary bg-surface-container hover:bg-primary-container/20 rounded-md transition-colors"
@@ -279,7 +279,7 @@ export default function Occasions({
                     {o.status}
                   </span>
                 </div>
-                <div className="flex opacity-0 group-hover:opacity-100 transition-opacity gap-1 bg-surface-container-low p-1 rounded-lg">
+                <div className="flex transition-opacity gap-1 bg-surface-container-low p-1 rounded-lg">
                   {o.status !== 'Completed' && (
                     <button onClick={() => onEditOccasion(o.id, { ...o, status: 'Completed' })} className="p-1 text-on-surface-variant hover:text-tertiary" title="Mark Completed"><CheckCircle size={14}/></button>
                   )}

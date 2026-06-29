@@ -191,7 +191,7 @@ export default function Customers({
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-2 transition-opacity">
                       <button 
                         onClick={(e) => { e.stopPropagation(); handleOpenEdit(c); }}
                         className="p-1.5 text-on-surface-variant hover:text-primary bg-surface-container hover:bg-primary-container/20 rounded-md transition-colors"
@@ -242,7 +242,7 @@ export default function Customers({
                     </div>
                   </div>
                 </div>
-                <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex transition-opacity">
                   <button onClick={() => handleOpenEdit(c)} className="p-1 text-on-surface-variant hover:text-primary"><Edit2 size={14}/></button>
                   <button onClick={() => onDeleteCustomer(c.id)} className="p-1 text-on-surface-variant hover:text-error"><Trash2 size={14}/></button>
                 </div>

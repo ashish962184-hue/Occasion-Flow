@@ -122,7 +122,7 @@ export default function PurchaseHistory({
                     <div className="font-headline text-sm font-bold text-on-surface">${Number(p.amount).toFixed(2)}</div>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-2 transition-opacity">
                       <button 
                         onClick={() => onNavigateToCustomer(p.customer_id)}
                         className="p-1.5 text-on-surface-variant hover:text-primary bg-surface-container hover:bg-primary-container/20 rounded-md transition-colors"
@@ -163,7 +163,7 @@ export default function PurchaseHistory({
                     <span className="font-mono text-xs text-on-surface-variant mb-1">{new Date(p.order_date).toISOString().split('T')[0]}</span>
                     <span className="font-headline text-sm font-bold text-on-surface">${Number(p.amount).toFixed(2)}</span>
                   </div>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex gap-1 transition-opacity">
                     <button onClick={() => onNavigateToCustomer(p.customer_id)} className="p-1 text-on-surface-variant hover:text-primary" title="View Customer"><Eye size={14}/></button>
                     <button onClick={() => onDeletePurchase && onDeletePurchase(p.id)} className="p-1 text-on-surface-variant hover:text-red-600" title="Delete Purchase"><Trash2 size={14}/></button>
                   </div>

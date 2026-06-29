@@ -138,7 +138,7 @@ export default function Dashboard({ metrics, occasions = [], reminders = [], onN
                           </span>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="flex justify-end gap-2 transition-opacity">
                             {occ.status !== 'Completed' && onEditOccasion && (
                               <button 
                                 onClick={() => onEditOccasion(occ.id, { ...occ, status: 'Completed' })}
