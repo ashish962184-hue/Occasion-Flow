@@ -104,7 +104,7 @@ export default function Dashboard({ metrics, occasions = [], reminders = [], onN
                 <tr className="bg-surface-container border-b border-outline-variant/15">
                   <th className="px-4 py-3 font-label text-xs font-bold text-on-surface-variant uppercase">Customer</th>
                   <th className="px-4 py-3 font-label text-xs font-bold text-on-surface-variant uppercase">Occasion</th>
-                  <th className="px-4 py-3 font-label text-xs font-bold text-on-surface-variant uppercase">Reminder Date</th>
+                  <th className="px-4 py-3 font-label text-xs font-bold text-on-surface-variant uppercase">Occasion Date</th>
                   <th className="px-4 py-3 font-label text-xs font-bold text-on-surface-variant uppercase">Status</th>
                   <th className="px-4 py-3 font-label text-xs font-bold text-on-surface-variant uppercase text-right">Actions</th>
                 </tr>
@@ -125,7 +125,7 @@ export default function Dashboard({ metrics, occasions = [], reminders = [], onN
                           <div className="font-body text-sm text-on-surface-variant">{occ.occasion_type}</div>
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">
-                          {rDate.getFullYear()}-{String(rDate.getMonth() + 1).padStart(2, '0')}-{String(rDate.getDate()).padStart(2, '0')}
+                          {occDate.getFullYear()}-{String(occDate.getMonth() + 1).padStart(2, '0')}-{String(occDate.getDate()).padStart(2, '0')}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
