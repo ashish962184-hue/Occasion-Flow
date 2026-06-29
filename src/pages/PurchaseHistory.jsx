@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, History, Eye, LayoutGrid, List, Gift } from 'lucide-react';
+import { Search, Plus, History, Eye, LayoutGrid, List, Gift, Trash2 } from 'lucide-react';
 
 export default function PurchaseHistory({ 
   purchaseHistory, 
   customers,
   onAddPurchase, 
+  onDeletePurchase,
   onNavigateToCustomer,
   searchQuery 
 }) {
@@ -126,8 +127,16 @@ export default function PurchaseHistory({
                       <button 
                         onClick={() => onNavigateToCustomer(p.customer_id)}
                         className="p-1.5 text-on-surface-variant hover:text-primary bg-surface-container hover:bg-primary-container/20 rounded-md transition-colors"
+                        title="View Customer"
                       >
                         <Eye size={16} />
+                      </button>
+                      <button 
+                        onClick={() => onDeletePurchase && onDeletePurchase(p.id)}
+                        className="p-1.5 text-on-surface-variant hover:text-red-600 bg-surface-container hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
+                        title="Delete Purchase"
+                      >
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
@@ -155,8 +164,9 @@ export default function PurchaseHistory({
                     <span className="font-mono text-xs text-on-surface-variant mb-1">{new Date(p.order_date).toISOString().split('T')[0]}</span>
                     <span className="font-headline text-sm font-bold text-on-surface">${Number(p.amount).toFixed(2)}</span>
                   </div>
-                  <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => onNavigateToCustomer(p.customer_id)} className="p-1 text-on-surface-variant hover:text-primary" title="View Customer"><Eye size={14}/></button>
+                    <button onClick={() => onDeletePurchase && onDeletePurchase(p.id)} className="p-1 text-on-surface-variant hover:text-red-600" title="Delete Purchase"><Trash2 size={14}/></button>
                   </div>
                 </div>
 

@@ -62,8 +62,28 @@ const getOrdersByCustomer = (req, res) => {
     );
 };
 
+// Delete Order
+const deleteOrder = (req, res) => {
+    const id = req.params.id;
+
+    db.query(
+        "DELETE FROM orders WHERE id = ?",
+        [id],
+        (err, result) => {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: "Order not found" });
+            }
+            res.json({ message: "Order deleted successfully" });
+        }
+    );
+};
+
 module.exports = {
     createOrder,
     getOrders,
-    getOrdersByCustomer
+    getOrdersByCustomer,
+    deleteOrder
 };

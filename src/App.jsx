@@ -287,6 +287,26 @@ export default function App() {
     } catch(err) { console.error(err); }
   };
 
+  const handleDeletePurchase = (id) => {
+    setConfirmDialog({
+      isOpen: true,
+      message: "Are you sure you want to remove this purchase?",
+      onConfirm: async () => {
+        setConfirmDialog({ isOpen: false, message: '', onConfirm: null });
+        try {
+          const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/purchase-history/${id}`, {
+            method: 'DELETE',
+          });
+          if (res.ok) {
+            triggerToast('Purchase removed successfully.');
+            fetchAllData();
+            if (selectedCustomerId) fetchCustomerDetail(selectedCustomerId);
+          }
+        } catch(err) { console.error(err); }
+      }
+    });
+  };
+
   const handleUpdateReminder = async (id, data) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/reminders/${id}`, {
@@ -447,6 +467,7 @@ export default function App() {
                   purchaseHistory={purchaseHistory}
                   customers={customers}
                   onAddPurchase={handleAddPurchase}
+                  onDeletePurchase={handleDeletePurchase}
                   onNavigateToCustomer={handleNavigateToCustomerDetail}
                   searchQuery={searchQuery}
                 />
