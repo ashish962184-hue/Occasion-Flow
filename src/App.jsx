@@ -71,6 +71,7 @@ export default function App() {
   // Dialog panels
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [quickAddTab, setQuickAddTab] = useState('client');
+  const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, message: '', onConfirm: null });
 
   // Quick form fields
   const [qName, setQName] = useState('');
@@ -199,20 +200,26 @@ export default function App() {
     } catch(err) { console.error(err); }
   };
 
-  const handleDeleteCustomer = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this customer? All their associated data will be removed.")) return;
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers/${id}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        triggerToast('Client profile deleted successfully.');
-        fetchAllData();
-        if (currentScreen === 'customer-detail' && selectedCustomerId === id) {
-          handleNavigate('customers');
-        }
+  const handleDeleteCustomer = (id) => {
+    setConfirmDialog({
+      isOpen: true,
+      message: "Are you sure you want to delete this customer? All their associated data will be removed.",
+      onConfirm: async () => {
+        setConfirmDialog({ isOpen: false, message: '', onConfirm: null });
+        try {
+          const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/customers/${id}`, {
+            method: 'DELETE',
+          });
+          if (res.ok) {
+            triggerToast('Client profile deleted successfully.');
+            fetchAllData();
+            if (currentScreen === 'customer-detail' && selectedCustomerId === id) {
+              handleNavigate('customers');
+            }
+          }
+        } catch(err) { console.error(err); }
       }
-    } catch(err) { console.error(err); }
+    });
   };
 
   const handleAddOccasion = async (data) => {
@@ -245,18 +252,24 @@ export default function App() {
     } catch(err) { console.error(err); }
   };
 
-  const handleDeleteOccasion = async (id) => {
-    if (!window.confirm("Are you sure you want to remove this occasion?")) return;
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions/${id}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        triggerToast('Occasion removed successfully.');
-        fetchAllData();
-        if (selectedCustomerId) fetchCustomerDetail(selectedCustomerId);
+  const handleDeleteOccasion = (id) => {
+    setConfirmDialog({
+      isOpen: true,
+      message: "Are you sure you want to remove this occasion?",
+      onConfirm: async () => {
+        setConfirmDialog({ isOpen: false, message: '', onConfirm: null });
+        try {
+          const res = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/occasions/${id}`, {
+            method: 'DELETE',
+          });
+          if (res.ok) {
+            triggerToast('Occasion removed successfully.');
+            fetchAllData();
+            if (selectedCustomerId) fetchCustomerDetail(selectedCustomerId);
+          }
+        } catch(err) { console.error(err); }
       }
-    } catch(err) { console.error(err); }
+    });
   };
 
   const handleAddPurchase = async (data) => {
@@ -613,6 +626,32 @@ export default function App() {
                 <button type="submit" className="px-4 py-2 text-sm font-bold bg-primary text-on-primary rounded-lg hover:bg-primary/90 transition-colors cursor-pointer">Save Record</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Confirmation Modal */}
+      {confirmDialog.isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-on-surface/40 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-surface-container-lowest rounded-2xl max-w-sm w-full border border-outline-variant/20 shadow-2xl p-6">
+            <h3 className="font-headline text-lg font-bold text-on-surface mb-3 flex items-center gap-2">
+              <span className="text-error"><XCircle size={20} /></span> Confirm Action
+            </h3>
+            <p className="font-body text-sm text-on-surface-variant mb-6">{confirmDialog.message}</p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setConfirmDialog({ isOpen: false, message: '', onConfirm: null })}
+                className="px-4 py-2 text-sm font-bold text-on-surface hover:bg-surface-container-highest rounded-lg transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDialog.onConfirm}
+                className="px-4 py-2 text-sm font-bold bg-error text-white rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
+              >
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       )}
