@@ -86,7 +86,7 @@ export default function Occasions({
   const handleOpenEdit = (occ) => {
     setCustomerId(occ.customer_id);
     setOccType(occ.occasion_type);
-    setOccDate(occ.occasion_date);
+    setOccDate(occ.occasion_date ? occ.occasion_date.split('T')[0] : '');
     setOccDays(occ.reminder_days);
     setStatus(occ.status);
     setEditingId(occ.id);
