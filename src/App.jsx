@@ -483,7 +483,12 @@ export default function App() {
               )}
 
               {currentScreen === 'reports' && reportsData && (
-                <Reports reportsData={reportsData} />
+                <Reports 
+                  reportsData={reportsData} 
+                  customers={customers}
+                  occasions={occasions}
+                  purchaseHistory={purchaseHistory}
+                />
               )}
 
               {currentScreen === 'settings' && (

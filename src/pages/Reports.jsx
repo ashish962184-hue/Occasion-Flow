@@ -1,20 +1,42 @@
 import React, { useState } from 'react';
 import { BarChart3, Download, TrendingUp, Users, DollarSign, Calendar, Filter } from 'lucide-react';
 
-export default function Reports({ reportsData }) {
+export default function Reports({ reportsData, customers, occasions, purchaseHistory }) {
   const [dateFilter, setDateFilter] = useState('YTD');
 
   if (!reportsData) return null;
 
-  const {
-    totalCustomers = 0,
-    totalOccasions = 0,
-    totalPurchases = 0,
-    totalRevenue = 0,
-    vipCount = 0,
-    standardCount = 0,
-    monthlyRevenue = {}
-  } = reportsData;
+  const now = new Date();
+  let startDate = new Date(now.getFullYear(), 0, 1); // Default YTD
+  
+  if (dateFilter === 'This Month') {
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (dateFilter === 'Last Quarter') {
+    startDate = new Date();
+    startDate.setMonth(now.getMonth() - 3);
+  }
+
+  // Filter Data
+  const filteredPurchases = purchaseHistory ? purchaseHistory.filter(p => {
+    if (!p.order_date) return false;
+    const d = new Date(p.order_date);
+    return d >= startDate && d <= now;
+  }) : [];
+
+  const totalCustomers = customers ? customers.length : 0;
+  const vipCount = customers ? customers.filter(c => c.customerType === 'VIP').length : 0;
+  const standardCount = customers ? customers.filter(c => c.customerType === 'Standard').length : 0;
+  const totalOccasions = occasions ? occasions.filter(o => o.status === 'Upcoming').length : 0;
+  
+  const totalPurchases = filteredPurchases.length;
+  const totalRevenue = filteredPurchases.reduce((acc, curr) => acc + (parseFloat(curr.amount) || 0), 0);
+
+  const monthlyRevenue = {};
+  filteredPurchases.forEach(p => {
+    const d = new Date(p.order_date);
+    const mName = d.toLocaleString('default', { month: 'short' });
+    monthlyRevenue[mName] = (monthlyRevenue[mName] || 0) + (parseFloat(p.amount) || 0);
+  });
 
   const handleExportCSV = async () => {
     try {
