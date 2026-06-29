@@ -22,7 +22,7 @@ export default function Occasions({
 
   const [customerId, setCustomerId] = useState('');
   const [occType, setOccType] = useState('Birthday');
-  const [occDate, setOccDate] = useState('2026-06-12');
+  const [occDate, setOccDate] = useState(new Date().toISOString().split('T')[0]);
   const [occDays, setOccDays] = useState(7);
   const [status, setStatus] = useState('Upcoming');
 

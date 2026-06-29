@@ -47,7 +47,7 @@ export default function GiftHistory({
   const [giftName, setGiftName] = useState('');
   const [category, setCategory] = useState('Spirits');
   const [amount, setAmount] = useState('');
-  const [purchaseDate, setPurchaseDate] = useState('2026-06-12');
+  const [purchaseDate, setPurchaseDate] = useState(new Date().toISOString().split('T')[0]);
   const [status, setStatus] = useState('Processing');
   const [notes, setNotes] = useState('');
 

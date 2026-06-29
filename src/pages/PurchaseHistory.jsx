@@ -19,7 +19,7 @@ export default function PurchaseHistory({
   const [customerId, setCustomerId] = useState('');
   const [giftItem, setGiftItem] = useState('');
   const [amount, setAmount] = useState('');
-  const [orderDate, setOrderDate] = useState('2026-06-12');
+  const [orderDate, setOrderDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
 
   const filtered = purchaseHistory.filter(p => 
@@ -101,8 +101,7 @@ export default function PurchaseHistory({
             </thead>
             <tbody>
               {filtered.length > 0 ? filtered.map((p) => {
-                 // Check if it's a repeat opportunity (11-12 months ago)
-                 const diff = (new Date('2026-06-12') - new Date(p.order_date)) / (1000*3600*24);
+                 const diff = (new Date() - new Date(p.order_date)) / (1000*3600*24);
                  const isRepeat = diff > 300 && diff < 365;
 
                  return (
@@ -154,7 +153,7 @@ export default function PurchaseHistory({
       ) : (
         <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filtered.map(p => {
-             const diff = (new Date('2026-06-12') - new Date(p.order_date)) / (1000*3600*24);
+             const diff = (new Date() - new Date(p.order_date)) / (1000*3600*24);
              const isRepeat = diff > 300 && diff < 365;
 
              return (

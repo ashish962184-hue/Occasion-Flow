@@ -82,13 +82,13 @@ export default function App() {
 
   const [qOccCust, setQOccCust] = useState('');
   const [qOccType, setQOccType] = useState('Birthday');
-  const [qOccDate, setQOccDate] = useState('2026-06-12');
+  const [qOccDate, setQOccDate] = useState(new Date().toISOString().split('T')[0]);
   const [qOccDays, setQOccDays] = useState(7);
 
   const [qGiftCust, setQGiftCust] = useState('');
   const [qGiftItem, setQGiftItem] = useState('');
   const [qGiftAmt, setQGiftAmt] = useState('');
-  const [qGiftDate, setQGiftDate] = useState('2026-06-12');
+  const [qGiftDate, setQGiftDate] = useState(new Date().toISOString().split('T')[0]);
 
   // Trigger Toast Messages helper
   const triggerToast = (text, type = 'success') => {
