@@ -635,7 +635,7 @@ export default function App() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-on-surface/40 backdrop-blur-sm p-4 animate-fadeIn">
           <div className="bg-surface-container-lowest rounded-2xl max-w-sm w-full border border-outline-variant/20 shadow-2xl p-6">
             <h3 className="font-headline text-lg font-bold text-on-surface mb-3 flex items-center gap-2">
-              <span className="text-error"><XCircle size={20} /></span> Confirm Action
+              <span className="text-red-600 dark:text-red-400"><XCircle size={20} /></span> Confirm Action
             </h3>
             <p className="font-body text-sm text-on-surface-variant mb-6">{confirmDialog.message}</p>
             <div className="flex justify-end gap-3">
@@ -647,7 +647,7 @@ export default function App() {
               </button>
               <button 
                 onClick={confirmDialog.onConfirm}
-                className="px-4 py-2 text-sm font-bold bg-error text-white rounded-lg hover:bg-error/90 transition-colors cursor-pointer"
+                className="px-4 py-2 text-sm font-bold bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors cursor-pointer"
               >
                 Confirm
               </button>
